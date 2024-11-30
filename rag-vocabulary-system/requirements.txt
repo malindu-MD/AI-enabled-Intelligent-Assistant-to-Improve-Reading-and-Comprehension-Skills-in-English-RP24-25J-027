@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pinecone-client
+sentence-transformers
+transformers
+torch
+tqdm
+python-dotenv
+huggingface-hub
+pandas
+httpx
+langchain
+google-generativeai
