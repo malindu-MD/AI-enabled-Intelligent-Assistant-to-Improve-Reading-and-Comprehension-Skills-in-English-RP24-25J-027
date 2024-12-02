@@ -1,6 +1,6 @@
 # AI-enabled-Intelligent-Assistant-to-Improve-Reading-and-Comprehension-Skills-in-English-RP24-25J-027
 
-## Contributors Checklist
+## Contributors Checklist:
 
 ### **Ranaweera A.P. - IT21182396 (Group Leader)**  
 - [ ] Assigned tasks to team members.  
