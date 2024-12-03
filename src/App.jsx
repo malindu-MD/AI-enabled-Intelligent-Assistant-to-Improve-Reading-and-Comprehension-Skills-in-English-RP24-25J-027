@@ -116,7 +116,7 @@ const WordSpeechApp = () => {
             </button>
           )}
 
-          {/* Next Word Button */}
+         
           <button 
             onClick={selectRandomWord} 
             className="bg-purple-500 text-white px-4 py-3 rounded-full hover:bg-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
