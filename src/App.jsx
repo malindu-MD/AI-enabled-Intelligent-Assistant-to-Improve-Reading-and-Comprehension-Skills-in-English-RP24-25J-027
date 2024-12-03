@@ -23,7 +23,7 @@ const WordSpeechApp = () => {
     setAudioBlob(null);
   };
 
-  // Initialize on component mount
+ 
   useEffect(() => {
     selectRandomWord();
   }, []);
