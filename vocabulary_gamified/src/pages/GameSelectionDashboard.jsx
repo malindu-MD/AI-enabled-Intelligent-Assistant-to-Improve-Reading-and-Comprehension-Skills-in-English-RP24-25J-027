@@ -1,49 +1,62 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
+
 
 const GameSelectionDashboard = () => {
   const [selectedGame, setSelectedGame] = useState(null);
+  const navigate = useNavigate();
 
   const gameTypes = [
     {
-      id: 'strategy',
+      id: 'chess',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 01-4.105-4.031l-.546-2.387a2 2 0 00-.554-1.022L9.732 4.732l-2.122 2.122a1 1 0 00-.293.707V12h-2V6.414a1 1 0 01.293-.707L9.732 2.585a2 2 0 011.022-.554l2.387-.546a6 6 0 014.105 4.032l.546 2.386a2 2 0 00.554 1.022l2.122 2.121-2.122 2.122a2 2 0 00-.553 1.021l.546 2.387a6 6 0 01-4.032 4.105l-2.386.546a2 2 0 01-1.022.554l-2.121-2.122-2.122 2.122a1 1 0 01-.707.293H4v-2h5.586a1 1 0 00.707-.293l2.122-2.122z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
         </svg>
       ),
-      title: 'Strategic Conquest',
-      description: 'Master complex scenarios and outsmart opponents',
+      title: 'SpellMaster',
+      description: 'Outsmart opponents with calculated moves',
       gradient: 'from-blue-500 to-indigo-600',
       background: 'bg-gradient-to-br from-blue-50 to-indigo-100',
-      textColor: 'text-blue-900'
+      textColor: 'text-blue-900',
+      route: '/word-association'
     },
     {
-      id: 'adventure',
+      id: 'rpg',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m3.343-5.657L5.929 5.929m12.728 12.728L18.071 18.07M7.05 7.05l-1.414-1.414m12.728 12.728l1.414 1.414M7.757 16.243a4 4 0 01-1.207-2.657 4 4 0 014-4h4a4 4 0 014 4 4 4 0 01-1.207 2.657" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 15l-2-1m0 0l2-1m-2 1v2.5M12 3l2 1m-2-1v2.5" />
         </svg>
       ),
-      title: 'Epic Odyssey',
-      description: 'Embark on legendary journeys and explore vast worlds',
+      title: 'Word Association game ',
+      description: 'Immerse yourself in rich, character-driven worlds',
       gradient: 'from-green-500 to-teal-600',
       background: 'bg-gradient-to-br from-green-50 to-teal-100',
-      textColor: 'text-green-900'
+      textColor: 'text-green-900',
+      route: '/word-association'
     },
     {
-      id: 'puzzle',
+      id: 'trivia',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.445.29-3.5.804v10A7.969 7.969 0 015.5 14c1.255 0 2.445.29 3.5.804V4.804zM7.5 14a7.964 7.964 0 00-3 .804V4.804A7.968 7.968 0 017.5 4c1.255 0 2.445.29 3.5.804v10A7.969 7.969 0 007.5 14zm5-10a7.968 7.968 0 013.5-.804c1.255 0 2.445.29 3.5.804v10a7.969 7.969 0 00-3.5-.804c-1.255 0-2.445.29-3.5.804V4.804z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.764.133-1.994.393-1.994 1.093 0 .969 1.908 1 2 1M12 17h.01M12 3v.01M5 19l2-2 2 2 2-2 2 2 2-2 2 2 2-2 2 2L21 5H3l2 2" />
         </svg>
       ),
-      title: 'Mind Maze',
-      description: 'Challenge your intellect with intricate puzzles',
+      title: 'Taboo Chat',
+      description: 'Test your wit with challenging trivia challenges',
       gradient: 'from-purple-500 to-pink-600',
       background: 'bg-gradient-to-br from-purple-50 to-pink-100',
-      textColor: 'text-purple-900'
+      textColor: 'text-purple-900',
+      route: '/taboo'
     }
   ];
+
+  const handleGameSelection = (gameId) => {
+    const selectedGameRoute = gameTypes.find(g => g.id === gameId)?.route;
+    if (selectedGameRoute) {
+      navigate(selectedGameRoute);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -52,7 +65,7 @@ const GameSelectionDashboard = () => {
         <div className="p-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 relative overflow-hidden">
           <div className="absolute inset-0 opacity-20 bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-800 animate-pulse"></div>
           <h1 className="text-4xl font-extrabold text-white text-center relative z-10 tracking-tight">
-            Unlock Your Gaming Destiny
+          The Path to Mastery Your Vocabulary Journey
           </h1>
           <p className="text-center text-white/80 mt-2 relative z-10">
             Choose your path and begin your adventure
@@ -64,7 +77,10 @@ const GameSelectionDashboard = () => {
           {gameTypes.map((game) => (
             <div 
               key={game.id}
-              onClick={() => setSelectedGame(game.id)}
+              onClick={() => {
+                setSelectedGame(game.id);
+                handleGameSelection(game.id);
+              }}
               className={`
                 ${game.background}
                 border-2 border-transparent 
@@ -118,33 +134,6 @@ const GameSelectionDashboard = () => {
             </div>
           ))}
         </div>
-
-        {/* Start Game Section */}
-        {selectedGame && (
-          <div className="p-8 bg-gray-50 text-center">
-            <button 
-              className="
-                bg-gradient-to-r from-indigo-600 to-purple-600
-                text-white 
-                px-8 
-                py-4 
-                rounded-full 
-                text-lg 
-                font-bold
-                hover:from-indigo-700 hover:to-purple-700 
-                transition-all 
-                duration-500
-                transform
-                hover:-translate-y-1
-                shadow-xl
-                hover:shadow-2xl
-              "
-              onClick={() => alert(`Launching ${gameTypes.find(g => g.id === selectedGame).title}`)}
-            >
-              Begin Your Quest
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api.query import router as query_router
+from app.api.query import router 
 
 app = FastAPI()
 
@@ -7,4 +7,12 @@ app = FastAPI()
 def read_root():
     return {"message": "Hello World "}
 
-app.include_router(query_router)
+
+
+@app.get("/word")
+def getNewHint():
+    # function logic
+    return {"message": "New hint"}
+
+
+app.include_router(router)

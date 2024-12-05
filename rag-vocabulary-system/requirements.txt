@@ -11,3 +11,6 @@ pandas
 httpx
 langchain
 google-generativeai
+streamlit 
+openai 
+langchain-community
