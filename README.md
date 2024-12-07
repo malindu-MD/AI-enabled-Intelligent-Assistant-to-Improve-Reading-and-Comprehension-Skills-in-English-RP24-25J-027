@@ -17,6 +17,9 @@
 - [ ] Contributed to technical documentation.
 
 ### **Sooriyaarachchi M.D.A - IT21173790**  
+
+![My Image](images/malindu_sys.png)
+
 - [ ] Designed and implemented frontend interfaces.  
 - [ ] Worked on responsive and user-friendly UI/UX designs.  
 - [ ] Conducted cross-browser and device compatibility testing.  
