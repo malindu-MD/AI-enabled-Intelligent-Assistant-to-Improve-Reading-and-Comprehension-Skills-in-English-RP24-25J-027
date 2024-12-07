@@ -17,7 +17,7 @@
 - [ ] Contributed to technical documentation.
 
 ### **Sooriyaarachchi M.D.A - IT21173790**  
-## System Diagram
+## System Diagram(AI-Powered Gaming English Vocabulary Improvement Module)
 ![My Image](images/malindu_sys.png)
 
 - [ ] Designed and implemented frontend interfaces.  
