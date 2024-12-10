@@ -9,7 +9,10 @@
 - [ ] Led team meetings and discussions.  
 - [ ] Ensured deadlines were met.
 
-### **Senanayake W.G.B. - IT21158322**  
+### **Senanayake W.G.B. - IT21158322**
+## System Diagram(Basic Comprehension Skills Enhancemen Module)
+![My Image](images/bvsys.png)
+
 - [ ] Developed and tested core backend functionality.  
 - [ ] Ensured proper database schema design and implementation.  
 - [ ] Created API endpoints and ensured smooth integration.  
