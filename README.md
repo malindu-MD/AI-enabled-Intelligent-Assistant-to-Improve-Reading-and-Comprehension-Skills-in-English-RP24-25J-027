@@ -42,6 +42,7 @@
 	* Selecting Embedding Model & Vector DB: Ollama, ChromaDB
  	* Embedding Creation Pipeline
  	* Corrective RAG
+- Frontend Interface Design
 
 
 <h3>Contributors:</h3>
