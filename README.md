@@ -30,12 +30,18 @@
 - [ ] Participated in feedback sessions for UI improvements.
 
 ### **Kumarathunga S.A.D.S - IT21118340**  
-- [ ] Performed system testing and identified bugs.  
-- [ ] Worked on unit and integration testing.  
-- [ ] Assisted with deployment and environment setup.  
-- [ ] Documented test cases and results.  
-- [ ] Supported debugging efforts and issue tracking.
+![System Architecture](https://github.com/IT21118340/RP24-25J-027/blob/master/Images/SysDia.png)
 
+#### Project Completion by Progress Presentation 01 (2024-12-04)
+- Prompt Engineering
+- Selecting Methodology: AI Agent vs RAG vs Agentic
+- AI Agent
+	* Selecting LLM Model & Inference Engine: Phi3, Ollama
+ 	* Selecting Architecture & Patterns: ReAct, Tool Calling
+- RAG Workflow
+	* Selecting Embedding Model & Vector DB: Ollama, ChromaDB
+ 	* Embedding Creation Pipeline
+ 	* Corrective RAG
 
 
 <h3>Contributors:</h3>
