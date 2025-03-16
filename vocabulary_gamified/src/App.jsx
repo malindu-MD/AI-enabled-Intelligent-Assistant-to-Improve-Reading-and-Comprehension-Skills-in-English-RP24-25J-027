@@ -6,18 +6,28 @@ import WordAssociationGame from './pages/WordAssociationGame'
 import VocabularyDashboard from './pages/VocabularyDashboard'
 import GameTypes from './pages/GameTypes'
 import GameSelectionDashboard from './pages/GameSelectionDashboard'
+import DashboardOne from './pages/DashboardOne'
+import WordAssociation from './pages/WordAssociation'
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<VocabularyDashboard />} />
+      <Routes> 
+        <Route path="/DashboardOne" element={<DashboardOne/>} />
+        
+        <Route path="/dashboard" element={<VocabularyDashboard />} />
         <Route path="/game-selection" element={<GameSelectionDashboard />} />
         <Route path="/word-association" element={<WordAssociationGame />} />
         <Route path="/taboo" element={<TabooGame />} />
         <Route path="/taboo-vocabulary" element={<TabooVocabularyGame />} />
+        <Route path="/wordssociation-two" element={<WordAssociation />} />
+
+        
+
+      
         {/* Add more routes as needed */}
       </Routes>
+      
     </Router>
   )
 }
