@@ -8,13 +8,14 @@ import GameTypes from './pages/GameTypes'
 import GameSelectionDashboard from './pages/GameSelectionDashboard'
 import DashboardOne from './pages/DashboardOne'
 import WordAssociation from './pages/WordAssociation'
+import Paragraph from './pages/Paragraph'
 
 function App() {
   return (
     <Router>
       <Routes> 
-        <Route path="/DashboardOne" element={<DashboardOne/>} />
-        
+        <Route path="/DashboardOne" element={<DashboardOne/>} />        
+        <Route path="/paragraph" element={<Paragraph />} />
         <Route path="/dashboard" element={<VocabularyDashboard />} />
         <Route path="/game-selection" element={<GameSelectionDashboard />} />
         <Route path="/word-association" element={<WordAssociationGame />} />
