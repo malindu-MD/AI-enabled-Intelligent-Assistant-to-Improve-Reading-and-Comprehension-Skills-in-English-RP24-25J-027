@@ -24,8 +24,10 @@ function AppRoutes() {
     return user ? children : <Navigate to="/login" />;
   };
 
+
   return (
     <Router>
+
       <Toaster position="top-right" reverseOrder={false} /> {/* ✅ Add Toaster Here */}
       <Routes>
         <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} />
@@ -77,6 +79,8 @@ function AppRoutes() {
         } />
       </Routes>
       <VocabularyBot />
+
+      
     </Router>
   );
 }
