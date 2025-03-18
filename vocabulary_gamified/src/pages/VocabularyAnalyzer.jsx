@@ -13,13 +13,20 @@ const topics = [
 
 // Level info
 const levelInfo = {
-  A1: { title: "Beginner", color: "bg-blue-500" },
+   A1: { title: "Beginner", color: "bg-blue-500" },
+  "A1+": { title: "Elementary", color: "bg-blue-500" },
   A2: { title: "Elementary", color: "bg-green-500" },
+  "A2+": { title: "Intermediate", color: "bg-green-500" },
   B1: { title: "Intermediate", color: "bg-yellow-500" },
+  "B1+": { title: "Upper Intermediate", color: "bg-yellow-500" },
   B2: { title: "Upper Intermediate", color: "bg-orange-500" },
+  "B2+": { title: "Advanced", color: "bg-orange-500" },
   C1: { title: "Advanced", color: "bg-red-500" },
-  C2: { title: "Proficient", color: "bg-purple-500" }
+  "C1+": { title: "Proficient", color: "bg-red-500" },
+  C2: { title: "Proficient", color: "bg-purple-500" },
+  "C2+": { title: "Proficient", color: "bg-purple-500" }
 };
+
 
 // Content for welcome slides
 const welcomeSlides = [

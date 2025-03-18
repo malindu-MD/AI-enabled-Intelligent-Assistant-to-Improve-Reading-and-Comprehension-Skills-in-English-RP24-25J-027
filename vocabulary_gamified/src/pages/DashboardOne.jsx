@@ -223,7 +223,7 @@ const DashboardOne = () => {
   student.level === 'Advanced' ? 'bg-red-600' :
   student.level === 'Proficient' ? 'bg-purple-600' : 'bg-gray-600'
 } ml-4 px-3 py-1 rounded-full flex items-center`}>
-  
+ 
   <span>Your Level: <strong>{student.level}</strong> </span>
   <span className="mr-2">{
     student.level === 'Beginner' ? '🌱' :
@@ -234,8 +234,33 @@ const DashboardOne = () => {
     student.level === 'Proficient' ? '🌟' : '👤'
   }</span>
 </div>
+
+      {/* New buttons for Paragraph, Vocabulary, and Pronunciation */}
+      <div className="flex ml-6 space-x-2">
+        <button 
+          onClick={() => handleSectionChange('paragraph')} 
+          className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
+        >
+          <span className="mr-2">📝</span>
+          <span>Paragraph</span>
+        </button>
+        <button 
+          onClick={() => handleSectionChange('vocabulary')} 
+          className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
+        >
+          <span className="mr-2">📚</span>
+          <span>Vocabulary</span>
+        </button>
+        <button 
+          onClick={() => handleSectionChange('pronunciation')} 
+          className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
+        >
+          <span className="mr-2">🗣️</span>
+          <span>Pronunciation</span>
+        </button>
+      </div>
     </div>
-    
+   
     {/* Right section - unchanged */}
     <div className="flex items-center space-x-4">
       <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
