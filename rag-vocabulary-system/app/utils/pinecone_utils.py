@@ -9,6 +9,7 @@ pc = Pinecone(api_key=PINECONE_API_KEY)
 model = SentenceTransformer("all-distilroberta-v1")
 
 
+
 # Create or connect to the index
 
 def create_pinecone_index():
@@ -21,7 +22,7 @@ def create_pinecone_index():
     )
 
 def get_pinecone_index():
-    return pc.Index(PINECONE_INDEX_NAME)
+    return pc.Index("quickstartnew")
 
 
 def generate_embeddings_and_upsert(df, batch_size=100):
