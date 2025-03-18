@@ -1,12 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUser } from '../components/UserContext';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import VocabularyAnalyzer from './VocabularyAnalyzer';
+import ContextualVocabularyForm from './ContextualVocabularyForm';
+import { Link,useNavigate  } from "react-router-dom";
+
 
 
 const DashboardOne = () => {
   // Student data - would come from a database in a real app
+
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedGame, setSelectedGame] = useState(null);
+  const [gameActive, setGameActive] = useState(false);
+  const [showPreferences, setShowPreferences] = useState(false);
+  const [showAddWord, setShowAddWord] = useState(false);
+  const [newWord, setNewWord] = useState({ word: "", definition: "", category: "academic" });
+  const {user,setUser}=useUser();
+  const navigate = useNavigate();
+
+  const handleGameClick = (game) => {
+    setSelectedGame(game.id);
+    navigate(`${game.link}`); // Redirects to the game page
+  };
+
+
   const [student, setStudent] = useState({
     name: "Alex Chen",
-    level: "Intermediate",
+    level: user.level,
     points: 780,
     streak: 5,
     preferences: {
@@ -18,9 +40,22 @@ const DashboardOne = () => {
       reviewFrequency: "daily"
     }
   });
+  
+ 
+  const handleSignOut = () => {
+    firebase.auth().signOut();
+    setUser(null);
+  };
 
-  const { user } = useUser();
+  useEffect(() => {
+    // Check if student level is the default "level" value
+    if (student.level === 'level') {
+      setShowAddWord(true);
+    }
+  }, [student.level]);
 
+
+  
   // Example difficult words list with categories
   const [words, setWords] = useState([
     { id: 1, word: "Ubiquitous", definition: "Present everywhere", category: "academic", mastered: false },
@@ -32,10 +67,9 @@ const DashboardOne = () => {
 
   // Game modes
   const gameModes = [
-    { id: "matching", name: "Word Match", icon: "🔤", description: "Match words with their definitions" },
-    { id: "quiz", name: "Word Quiz", icon: "❓", description: "Multiple choice questions about word meanings" },
-    { id: "flashcards", name: "Flashcards", icon: "🃏", description: "Review words with interactive flashcards" },
-    { id: "hangman", name: "Word Guess", icon: "🎮", description: "Guess the word letter by letter" }
+    { id: "matching", name: "Word Association", icon: "🔤", description: "Match words with connection" ,link:"/wordssociation-two"},
+    { id: "quiz", name: "Word Quiz", icon: "❓", description: "Multiple choice questions about word meanings",link:"/vocabulary-game-quiz" },
+    { id: "hangman", name: "Word Guess", icon: "🎮", description: "Guess the word letter by letter" ,link:"/vocabulary-game-quiz1"}
   ];
 
   // Categories
@@ -48,12 +82,7 @@ const DashboardOne = () => {
   ];
   
   // Interface states
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedGame, setSelectedGame] = useState(null);
-  const [gameActive, setGameActive] = useState(false);
-  const [showPreferences, setShowPreferences] = useState(false);
-  const [showAddWord, setShowAddWord] = useState(false);
-  const [newWord, setNewWord] = useState({ word: "", definition: "", category: "academic" });
+
   
   // Simple matching game state
   const [matchingGameState, setMatchingGameState] = useState({
@@ -159,287 +188,96 @@ const DashboardOne = () => {
   return (
     <div className="flex flex-col min-h-screen w-full bg-indigo-50">
       {/* Header */}
-      <header className="bg-indigo-600 text-white p-4 shadow-md">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Word Wizard</h1>
-          <div className="flex items-center space-x-4">
-            <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
-              <span className="mr-2">⭐</span>
-              <span>{student.points} pts</span>
-            </div>
-            <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
-              <span className="mr-2">🔥</span>
-              <span>{student.streak} days</span>
-            </div>
-            <button 
-              onClick={() => {
-                setShowPreferences(true);
-                setShowAddWord(false);
-              }}
-              className="bg-indigo-500 px-3 py-1 rounded-full flex items-center hover:bg-indigo-400"
-            >
-              <span className="mr-2">⚙️</span>
-              <span>Preferences</span>
-            </button>
-            <div 
-              className="bg-indigo-800 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer"
-              onClick={() => {
-                setShowPreferences(false);
-                setShowAddWord(false);
-              }}
-            >
-              {student.name.charAt(0)}
-            </div>
-          </div>
-        </div>
-      </header>
+     
+{
+  /**
+   * 
+   *  A1: { title: "Beginner", color: "bg-blue-500" },
+  A2: { title: "Elementary", color: "bg-green-500" },
+  B1: { title: "Intermediate", color: "bg-yellow-500" },
+  B2: { title: "Upper Intermediate", color: "bg-orange-500" },
+  C1: { title: "Advanced", color: "bg-red-500" },
+  C2: { title: "Proficient", color: "bg-purple-500" }
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   */
+}
+
+<header className="bg-indigo-600 text-white p-4 shadow-md">
+  <div className="flex justify-between items-center">
+    {/* Modified left section to include level */}
+    <div className="flex items-center">
+      {/* <h1 className="text-2xl font-bold">Word Wizard</h1> */}
+     
+      {/* Level indicator - ADD THIS */}
+      <div className={`${
+  student.level === 'level' ? 'bg-gray-600' :
+  student.level === 'Beginner' ? 'bg-blue-600' :
+  student.level === 'Elementary' ? 'bg-green-600' :
+  student.level === 'Intermediate' ? 'bg-yellow-600' :
+  student.level === 'Upper Intermediate' ? 'bg-orange-600' :
+  student.level === 'Advanced' ? 'bg-red-600' :
+  student.level === 'Proficient' ? 'bg-purple-600' : 'bg-gray-600'
+} ml-4 px-3 py-1 rounded-full flex items-center`}>
+  
+  <span>Your Level: <strong>{student.level}</strong> </span>
+  <span className="mr-2">{
+    student.level === 'Beginner' ? '🌱' :
+    student.level === 'Elementary' ? '🌿' :
+    student.level === 'Intermediate' ? '🌾' :
+    student.level === 'Upper Intermediate' ? '🌲' :
+    student.level === 'Advanced' ? '🌳' :
+    student.level === 'Proficient' ? '🌟' : '👤'
+  }</span>
+</div>
+    </div>
+    
+    {/* Right section - unchanged */}
+    <div className="flex items-center space-x-4">
+      <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
+        <span className="mr-2">⭐</span>
+        <span>{student.points} pts</span>
+      </div>
+      <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
+        <span className="mr-2">🔥</span>
+        <span>{student.streak} days</span>
+      </div>
+      <button
+        onClick={() => {
+          setShowPreferences(true);
+          setShowAddWord(false);
+        }}
+        className="bg-indigo-500 px-3 py-1 rounded-full flex items-center hover:bg-indigo-400"
+      >
+        <span className="mr-2">⚙️</span>
+        <span>Preferences</span>
+      </button>
+      <div
+        className="bg-indigo-800 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer"
+        onClick={handleSignOut}
+      >
+        {student.name.charAt(0)}
+      </div>
+    </div>
+  </div>
+</header>
+
 
       {/* Main Content */}
       <main className="flex-grow p-4">
         {showPreferences ? (
-          <div className="bg-white rounded-lg p-6 shadow-md mb-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-indigo-800">Your Learning Preferences</h2>
-              <button 
-                onClick={() => setShowPreferences(false)}
-                className="bg-gray-200 text-gray-800 px-3 py-1 rounded-md hover:bg-gray-300"
-              >
-                Close
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-bold text-indigo-700 mb-3">Game Preferences</h3>
-                
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Preferred Game Styles</label>
-                  <div className="flex flex-wrap gap-2">
-                    {gameModes.map(game => (
-                      <div 
-                        key={game.id}
-                        className={`px-3 py-2 rounded-md cursor-pointer border 
-                          ${student.preferences.gameStyles.includes(game.id) 
-                            ? 'bg-indigo-100 border-indigo-500' 
-                            : 'bg-gray-100 border-gray-300'}`}
-                        onClick={() => {
-                          const updatedStyles = student.preferences.gameStyles.includes(game.id)
-                            ? student.preferences.gameStyles.filter(style => style !== game.id)
-                            : [...student.preferences.gameStyles, game.id];
-                            
-                          setStudent({
-                            ...student,
-                            preferences: {
-                              ...student.preferences,
-                              gameStyles: updatedStyles
-                            }
-                          });
-                        }}
-                      >
-                        <span>{game.icon} {game.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Word Categories</label>
-                  <div className="flex flex-wrap gap-2">
-                    {categories.map(category => (
-                      <div 
-                        key={category.id}
-                        className={`px-3 py-2 rounded-md cursor-pointer border 
-                          ${student.preferences.categories.includes(category.id) 
-                            ? 'bg-indigo-100 border-indigo-500' 
-                            : 'bg-gray-100 border-gray-300'}`}
-                        onClick={() => {
-                          const updatedCategories = student.preferences.categories.includes(category.id)
-                            ? student.preferences.categories.filter(cat => cat !== category.id)
-                            : [...student.preferences.categories, category.id];
-                            
-                          setStudent({
-                            ...student,
-                            preferences: {
-                              ...student.preferences,
-                              categories: updatedCategories
-                            }
-                          });
-                        }}
-                      >
-                        <span>{category.icon} {category.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="font-bold text-indigo-700 mb-3">Learning Preferences</h3>
-                
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Difficulty Level</label>
-                  <select 
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                    value={student.preferences.difficulty}
-                    onChange={(e) => setStudent({
-                      ...student,
-                      preferences: {
-                        ...student.preferences,
-                        difficulty: e.target.value
-                      }
-                    })}
-                  >
-                    <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
-                    <option value="very-hard">Very Hard</option>
-                  </select>
-                </div>
-                
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Learning Style</label>
-                  <select 
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                    value={student.preferences.learningStyle}
-                    onChange={(e) => setStudent({
-                      ...student,
-                      preferences: {
-                        ...student.preferences,
-                        learningStyle: e.target.value
-                      }
-                    })}
-                  >
-                    <option value="visual">Visual</option>
-                    <option value="auditory">Auditory</option>
-                    <option value="reading">Reading/Writing</option>
-                    <option value="kinesthetic">Kinesthetic</option>
-                  </select>
-                </div>
-                
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Daily Word Goal</label>
-                  <input 
-                    type="number" 
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                    value={student.preferences.dailyGoal}
-                    onChange={(e) => setStudent({
-                      ...student,
-                      preferences: {
-                        ...student.preferences,
-                        dailyGoal: parseInt(e.target.value)
-                      }
-                    })}
-                    min="1"
-                    max="50"
-                  />
-                </div>
-                
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Review Frequency</label>
-                  <select 
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                    value={student.preferences.reviewFrequency}
-                    onChange={(e) => setStudent({
-                      ...student,
-                      preferences: {
-                        ...student.preferences,
-                        reviewFrequency: e.target.value
-                      }
-                    })}
-                  >
-                    <option value="daily">Daily</option>
-                    <option value="spaced">Spaced Repetition</option>
-                    <option value="weekly">Weekly</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ContextualVocabularyForm setShowPreferences={setShowPreferences}/>
         ) : showAddWord ? (
-          <div className="bg-white rounded-lg p-6 shadow-md mb-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-indigo-800">Add Your Difficult Words</h2>
-              <button 
-                onClick={() => setShowAddWord(false)}
-                className="bg-gray-200 text-gray-800 px-3 py-1 rounded-md hover:bg-gray-300"
-              >
-                Close
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-1 gap-4 mb-6">
-              <div>
-                <label className="block text-gray-700 mb-2">Word</label>
-                <input 
-                  type="text" 
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  value={newWord.word}
-                  onChange={(e) => setNewWord({...newWord, word: e.target.value})}
-                  placeholder="Enter a difficult word"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-gray-700 mb-2">Definition</label>
-                <textarea 
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  value={newWord.definition}
-                  onChange={(e) => setNewWord({...newWord, definition: e.target.value})}
-                  placeholder="Enter the definition"
-                  rows="3"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-gray-700 mb-2">Category</label>
-                <select 
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  value={newWord.category}
-                  onChange={(e) => setNewWord({...newWord, category: e.target.value})}
-                >
-                  {categories.map(category => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            
-            <div className="flex justify-end">
-              <button 
-                className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
-                onClick={() => {
-                  if (newWord.word.trim() && newWord.definition.trim()) {
-                    // Add the new word to the list
-                    const newWordObj = {
-                      id: words.length + 1,
-                      word: newWord.word.trim(),
-                      definition: newWord.definition.trim(),
-                      category: newWord.category,
-                      mastered: false
-                    };
-                    
-                    setWords([...words, newWordObj]);
-                    // Reset the form
-                    setNewWord({ word: "", definition: "", category: "academic" });
-                    // Show success message
-                    alert("Word added successfully! You earned 10 points for adding a new word.");
-                    setStudent({...student, points: student.points + 10});
-                  } else {
-                    alert("Please enter both a word and definition.");
-                  }
-                }}
-              >
-                Add Word
-              </button>
-            </div>
-          </div>
+         <VocabularyAnalyzer setShowAddWord={setShowAddWord}/>
         ) : !gameActive ? (
           <div>
             {/* Welcome section */}
             <div className="bg-white rounded-lg p-6 shadow-md mb-6">
-              <h2 className="text-xl font-bold text-indigo-800 mb-2">Hello, {user?.email || "Guest"}!</h2>
+              <h2 className="text-xl font-bold text-indigo-800 mb-2">Hello, {user?.name}!</h2>
               <p className="text-gray-600">Continue building your vocabulary skills. You're on a {student.streak}-day streak!</p>
               <div className="mt-4 mb-4 bg-indigo-100 p-3 rounded-md">
                 <h3 className="font-semibold text-indigo-800">Today's Challenge:</h3>
@@ -452,20 +290,20 @@ const DashboardOne = () => {
                   setShowPreferences(false);
                 }}
               >
-                + Add Your Difficult Words
+                Test Your Level
               </button>
             </div>
 
             {/* Game modes section */}
             <div className="bg-white rounded-lg p-6 shadow-md mb-6">
               <h2 className="text-xl font-bold text-indigo-800 mb-4">Choose a Game Mode</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 ">
                 {gameModes.map(game => (
                   <div 
                     key={game.id}
                     className={`p-4 rounded-lg text-center cursor-pointer transition-colors border-2 
                       ${selectedGame === game.id ? 'border-indigo-600 bg-indigo-100' : 'border-gray-200 hover:bg-indigo-50'}`}
-                    onClick={() => setSelectedGame(game.id)}
+                    onClick={() => handleGameClick(game)} 
                   >
                     <div className="text-3xl mb-2">{game.icon}</div>
                     <h3 className="font-bold text-indigo-800">{game.name}</h3>

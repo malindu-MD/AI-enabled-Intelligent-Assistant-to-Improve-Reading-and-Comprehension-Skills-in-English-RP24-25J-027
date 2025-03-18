@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+// File: App.jsx
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 import TabooVocabularyGame from './pages/TabooVocabularyGame'
 import TabooGame from './pages/TabooGame'
@@ -6,31 +7,90 @@ import WordAssociationGame from './pages/WordAssociationGame'
 import VocabularyDashboard from './pages/VocabularyDashboard'
 import GameTypes from './pages/GameTypes'
 import GameSelectionDashboard from './pages/GameSelectionDashboard'
+import LoginForm from './pages/LoginForm'
 import DashboardOne from './pages/DashboardOne'
+import VocabularyBot from './pages/VocabularyBot'
+import VocabularyQuizGame from './pages/VocabularyQuizGame'
 import WordAssociation from './pages/WordAssociation'
-import Paragraph from './pages/Paragraph'
+import VocabularyAnalyzer from './pages/VocabularyAnalyzer'
+import { Toaster } from 'react-hot-toast';
+import { UserProvider, useUser } from './components/UserContext.jsx'
+
+function AppRoutes() {
+  const { user } = useUser();
+
+  // Redirect to login if not authenticated for protected routes
+  const ProtectedRoute = ({ children }) => {
+    return user ? children : <Navigate to="/login" />;
+  };
+
+
+  return (
+    <Router>
+
+      <Toaster position="top-right" reverseOrder={false} /> {/* ✅ Add Toaster Here */}
+      <Routes>
+        <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} />
+        <Route path="/login" element={user ? <Navigate to="/DashboardOne" /> : <LoginForm />} />
+        <Route path="/DashboardOne" element={
+          <ProtectedRoute>
+            <DashboardOne />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <VocabularyDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/game-selection" element={
+          <ProtectedRoute>
+            <GameSelectionDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/word-association" element={
+          <ProtectedRoute>
+            <WordAssociationGame />
+          </ProtectedRoute>
+        } />
+        <Route path="vocabulary-game-quiz1" element={
+          <ProtectedRoute>
+            <TabooGame />
+          </ProtectedRoute>
+        } />
+        <Route path="/taboo-vocabulary" element={
+          <ProtectedRoute>
+            <TabooVocabularyGame />
+          </ProtectedRoute>
+        } />
+        <Route path="/vocabulary-game-quiz" element={
+          <ProtectedRoute>
+            <VocabularyQuizGame />
+          </ProtectedRoute>
+        } />
+        <Route path="/wordssociation-two" element={
+          <ProtectedRoute>
+            <WordAssociation />
+          </ProtectedRoute>
+        } />
+        <Route path="/vocabulary-analyzer" element={
+          <ProtectedRoute>
+            <VocabularyAnalyzer />
+          </ProtectedRoute>
+        } />
+      </Routes>
+      <VocabularyBot />
+
+      
+    </Router>
+  );
+}
 
 function App() {
   return (
-    <Router>
-      <Routes> 
-        <Route path="/DashboardOne" element={<DashboardOne/>} />        
-        <Route path="/paragraph" element={<Paragraph />} />
-        <Route path="/dashboard" element={<VocabularyDashboard />} />
-        <Route path="/game-selection" element={<GameSelectionDashboard />} />
-        <Route path="/word-association" element={<WordAssociationGame />} />
-        <Route path="/taboo" element={<TabooGame />} />
-        <Route path="/taboo-vocabulary" element={<TabooVocabularyGame />} />
-        <Route path="/wordssociation-two" element={<WordAssociation />} />
-
-        
-
-      
-        {/* Add more routes as needed */}
-      </Routes>
-      
-    </Router>
-  )
+    <UserProvider>
+      <AppRoutes />
+    </UserProvider>
+  );
 }
 
 export default App

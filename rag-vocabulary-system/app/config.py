@@ -8,3 +8,5 @@ HUGGINGFACE_TOKEN = os.getenv("HUGGINGFACE_TOKEN")
 MODEL_NAME = "meta-llama/Llama-3.2-1B-Instruct"
 SENTENCE_TRANSFORMER = "all-distilroberta-v1"
 PINECONE_INDEX_NAME = "quickstart"
+PINECONE_ENV = os.getenv("PINECONE_ENV")
+openai_api_key = os.getenv("OPENAI_API_KEY")

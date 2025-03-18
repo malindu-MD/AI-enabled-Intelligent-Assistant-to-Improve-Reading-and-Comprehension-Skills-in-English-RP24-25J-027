@@ -14,3 +14,16 @@ google-generativeai
 streamlit 
 openai 
 langchain-community
+langchain
+faiss-cpu
+
+
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useUser } from '../components/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const WordAssociation = () => {
   // Game questions - each has 3 clue words, 4 possible answers with 1 correct, and an explanation
@@ -23,12 +25,14 @@ const WordAssociation = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [gameQuestions, setGameQuestions] = useState([]);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
   
   // Game level and preferences
   const [gameLevel, setGameLevel] = useState("Beginner");
   const [gamePreferences, setGamePreferences] = useState("Software");
   
   const timerRef = useRef(null);
+  const {user,setUser}=useUser();
 
   // Timer effect
   useEffect(() => {
@@ -51,6 +55,13 @@ const WordAssociation = () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [gameStarted, currentQuestion, answerSubmitted, timeExpired]);
+
+
+
+  const exitGame1= () => {
+    navigate('/DashboardOne');
+    console.log("Exiting game...");
+  };
 
   // Handle answer selection
   const handleAnswerSelect = (answer) => {
@@ -122,6 +133,20 @@ const WordAssociation = () => {
   // Functions
   // Function to fetch questions from API
   const fetchQuestions = async () => {
+
+    const userLevel = user?.level && user.level !== 'level' 
+    ? user.level 
+    : 'Elementary';
+
+
+    const userPreference = user?.preferences?.contextInterests?.length > 0
+  ? user.preferences.contextInterests[Math.floor(Math.random() * user.preferences.contextInterests.length)]
+  : 'any';
+
+  console.log(userLevel);
+  console.log(userPreference);
+    
+
     try {
       setIsLoading(true);
       setError(null);
@@ -133,8 +158,8 @@ const WordAssociation = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          level: gameLevel,
-          preferences: gamePreferences
+          level: userLevel,
+          preferences: userPreference
         })
       });
       
@@ -488,66 +513,77 @@ const WordAssociation = () => {
 
   const renderInstructions = () => {
     return (
-              <div className="text-center max-w-lg mx-auto">
-        <h1 className="text-3xl font-bold mb-4 text-blue-800 text-center">Word Connection Challenge</h1>
+      <div className="text-center max-w-lg mx-auto">
+      <div className="relative mb-4">
         
-        {/* Game Logo/Image */}
-        <div className="mb-4">
-          <div className="relative w-64 h-64 mx-auto">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full opacity-20 animate-pulse"></div>
-            <div className="absolute inset-4 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full shadow-lg flex items-center justify-center">
-              <div className="absolute">
-                <div className="flex -space-x-2">
-                  <div className="w-16 h-16 rounded-full bg-white shadow-inner flex items-center justify-center transform -rotate-12 translate-x-6 -translate-y-1">
-                    <span className="text-2xl font-bold text-blue-800">A</span>
-                  </div>
-                  <div className="w-16 h-16 rounded-full bg-white shadow-inner flex items-center justify-center transform rotate-3 translate-y-2">
-                    <span className="text-2xl font-bold text-blue-800">B</span>
-                  </div>
-                  <div className="w-16 h-16 rounded-full bg-white shadow-inner flex items-center justify-center transform rotate-12 -translate-x-6 -translate-y-1">
-                    <span className="text-2xl font-bold text-blue-800">C</span>
-                  </div>
+        <h1 className="text-3xl font-bold mb-4 text-blue-800 text-center">Word Connection Challenge</h1>
+      </div>
+     
+      {/* Game Logo/Image */}
+      <div className="mb-4">
+        <div className="relative w-64 h-64 mx-auto">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full opacity-20 animate-pulse"></div>
+          <div className="absolute inset-4 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full shadow-lg flex items-center justify-center">
+            <div className="absolute">
+              <div className="flex -space-x-2">
+                <div className="w-16 h-16 rounded-full bg-white shadow-inner flex items-center justify-center transform -rotate-12 translate-x-6 -translate-y-1">
+                  <span className="text-2xl font-bold text-blue-800">A</span>
+                </div>
+                <div className="w-16 h-16 rounded-full bg-white shadow-inner flex items-center justify-center transform rotate-3 translate-y-2">
+                  <span className="text-2xl font-bold text-blue-800">B</span>
+                </div>
+                <div className="w-16 h-16 rounded-full bg-white shadow-inner flex items-center justify-center transform rotate-12 -translate-x-6 -translate-y-1">
+                  <span className="text-2xl font-bold text-blue-800">C</span>
                 </div>
               </div>
-              <div className="absolute bottom-10 w-full text-center">
-                <svg className="mx-auto w-24 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path>
-                </svg>
-              </div>
+            </div>
+            <div className="absolute bottom-10 w-full text-center">
+              <svg className="mx-auto w-24 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path>
+              </svg>
             </div>
           </div>
-        </div>
-        
-        <div className="bg-blue-100 p-4 rounded-lg mb-6 border-l-4 border-blue-500">
-          <div className="mb-4">
-            <h2 className="text-xl font-bold text-blue-800 mb-4">How to Play:</h2>
-            <div className="space-y-3 mb-4">
-              <div className="flex items-start">
-                <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 text-xs">1</span>
-                <span className="text-base">You'll see <strong>3 clue words</strong> that share a connection.</span>
-              </div>
-              <div className="flex items-start">
-                <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 text-xs">2</span>
-                <span className="text-base">Choose <strong>1 answer</strong> from the 4 options that relates to all clues.</span>
-              </div>
-              <div className="flex items-start">
-                <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 text-xs">3</span>
-                <span className="text-base">You have <strong>only 10 seconds</strong> to answer each question!</span>
-              </div>
-              <div className="flex items-start">
-                <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 text-xs">4</span>
-                <span className="text-base">Earn more points for faster answers and build a streak.</span>
-              </div>
-            </div>
-          </div>
-          <button 
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold text-lg shadow-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 animate-pulse"
-            onClick={startGame}
-          >
-            Start Game
-          </button>
         </div>
       </div>
+     
+      <div className="bg-blue-100 p-4 rounded-lg mb-6 border-l-4 border-blue-500">
+        <div className="mb-4">
+          <h2 className="text-xl font-bold text-blue-800 mb-4">How to Play:</h2>
+          <div className="space-y-3 mb-4">
+            <div className="flex items-start">
+              <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 text-xs">1</span>
+              <span className="text-base">You'll see <strong>3 clue words</strong> that share a connection.</span>
+            </div>
+            <div className="flex items-start">
+              <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 text-xs">2</span>
+              <span className="text-base">Choose <strong>1 answer</strong> from the 4 options that relates to all clues.</span>
+            </div>
+            <div className="flex items-start">
+              <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 text-xs">3</span>
+              <span className="text-base">You have <strong>only 10 seconds</strong> to answer each question!</span>
+            </div>
+            <div className="flex items-start">
+              <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0 text-xs">4</span>
+              <span className="text-base">Earn more points for faster answers and build a streak.</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-row space-x-4 items-center justify-center">
+  <button
+    className="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold text-lg shadow-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-300 animate-pulse"
+    onClick={startGame}
+  >
+    Start
+  </button>
+  <button
+    className="bg-red-600 text-white px-8 py-3 rounded-lg font-bold text-lg shadow-lg hover:bg-red-700 transform hover:scale-105 transition-all duration-300"
+    onClick={exitGame1}
+  >
+    Exit
+  </button>
+</div>
+      </div>
+    </div>
     );
   };
 

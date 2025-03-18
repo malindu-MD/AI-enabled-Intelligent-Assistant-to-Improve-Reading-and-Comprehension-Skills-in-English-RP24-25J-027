@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Draggable from 'react-draggable';
 import { API_URL } from '../services/Config';
+import { useUser } from '../components/UserContext';
 const VocabularyBot = () => {
 
     const [position, setPosition] = useState({ x: 0, y: 0 });
   
     // Track if the chatbot is being dragged to prevent button clicks during drag
     const [isDragging, setIsDragging] = useState(false);
+
     
     // Handle start/stop dragging
     const handleStartDrag = () => setIsDragging(true);
@@ -22,6 +24,8 @@ const VocabularyBot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [learningStyle, setLearningStyle] = useState('visual');
   const [animations, setAnimations] = useState(true);
+
+   const {user,setUser}=useUser();  
   
   // References
   const messagesEndRef = useRef(null);
@@ -60,7 +64,7 @@ const VocabularyBot = () => {
           { 
             id: Date.now(), 
             sender: 'bot', 
-            text: "👋 Hi there! I'm Professor Verba, your vocabulary assistant! What word would you like to learn about today?",
+            text: `👋 Hi ${user?.name} I'm Mr. Vocab, your vocabulary assistant! What word would you like to learn about today?`,
             special: 'welcome'
           }
         ]);
@@ -127,13 +131,26 @@ const VocabularyBot = () => {
       showHelp();
       return;
     }
+
+
+    const userLevel = user?.level && user.level !== 'level' 
+    ? user.level 
+    : 'Elementary';
+
+
+    const userPreference = user?.preferences?.contextInterests?.length > 0
+  ? user.preferences.contextInterests[Math.floor(Math.random() * user.preferences.contextInterests.length)]
+  : 'any';
+
+  console.log(userLevel);
+  console.log(userPreference);
     
     try {
       // Fetch data from the API
       const requestData = {
         word: extractedWord,
-        level: 'Proficient',  // Make sure these values are properly set in your component
-        preferences: 'Sport'
+        level: userLevel,  // Make sure these values are properly set in your component
+        preferences: userPreference
     };
 
     // Send a POST request to the API
@@ -190,7 +207,7 @@ const VocabularyBot = () => {
         { 
           id: Date.now(), 
           sender: 'bot', 
-          text: `Sorry, I'm having trouble connecting to my dictionary right now. Please try again later.`,
+          text: `Sorry, I'm having trouble connecting . Please try again later.`,
           special: 'error'
         }
       ]);
