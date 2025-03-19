@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../components/UserContext';
+import { Link,useNavigate  } from "react-router-dom";
+
 
 const DashboardOne = () => {
+
+  const { user } = useUser();
   // Student data - would come from a database in a real app
   const [student, setStudent] = useState({
     name: "Alex Chen",
-    level: "Intermediate",
+    level: user.level,
     points: 780,
     streak: 5,
     preferences: {
@@ -18,7 +22,7 @@ const DashboardOne = () => {
     }
   });
 
-  const { user } = useUser();
+ 
 
   // Example difficult words list with categories
   const [words, setWords] = useState([
@@ -70,6 +74,8 @@ const DashboardOne = () => {
   const [userAnswers, setUserAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [resultsData, setResultsData] = useState(null);
+  const navigate = useNavigate();
+  
   
   // Simple matching game state
   const [matchingGameState, setMatchingGameState] = useState({
@@ -137,6 +143,15 @@ const fetchReadingContent = async () => {
       ...prev,
       [questionId]: optionIndex
     }));
+  };
+
+  const exitGame1= () => {
+    navigate('/DashboardOne');
+    console.log("Exiting game...");
+  };
+  const exitGame2= () => {
+    navigate('/paragraph');
+    console.log("Exiting game...");
   };
   
   // Calculate results for MCQs
@@ -310,8 +325,59 @@ const fetchReadingContent = async () => {
       {/* Header */}
       <header className="bg-indigo-600 text-white p-4 shadow-md">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Read Now</h1>
+
+          
+          {/* <h1 className="text-2xl font-bold">Read Now</h1> */}
+          <div className={`${
+  student.level === 'level' ? 'bg-gray-600' :
+  student.level === 'Beginner' ? 'bg-blue-600' :
+  student.level === 'Elementary' ? 'bg-green-600' :
+  student.level === 'Intermediate' ? 'bg-yellow-600' :
+  student.level === 'Upper Intermediate' ? 'bg-orange-600' :
+  student.level === 'Advanced' ? 'bg-red-600' :
+  student.level === 'Proficient' ? 'bg-purple-600' : 'bg-gray-600'
+} ml-4 px-3 py-1 rounded-full flex items-center`}>
+ 
+  <span>Your Level: <strong>{student.level}</strong> </span>
+  <span className="mr-2">{
+    student.level === 'Beginner' ? '🌱' :
+    student.level === 'Elementary' ? '🌿' :
+    student.level === 'Intermediate' ? '🌾' :
+    student.level === 'Upper Intermediate' ? '🌲' :
+    student.level === 'Advanced' ? '🌳' :
+    student.level === 'Proficient' ? '🌟' : '👤'
+  }</span>
+</div>
+
+
+          <div className="flex ml-6 space-x-2">
+        <button 
+        
+        onClick={exitGame2}  
+        className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
+        >
+          <span className="mr-2">📝</span>
+          <span>Paragraph</span>
+        </button>   
+        
+        <button 
+             onClick={exitGame1}
+          className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
+        >
+          <span className="mr-2">📚</span>
+          <span>Vocabulary</span>
+        </button>
+        <button 
+        
+          className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
+        >
+          <span className="mr-2">🗣️</span>
+          <span>Pronunciation</span>
+        </button>
+      </div>
           <div className="flex items-center space-x-4">
+
+     
             <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
               <span className="mr-2">⭐</span>
               <span>{student.points} pts</span>

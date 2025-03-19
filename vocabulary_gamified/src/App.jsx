@@ -13,6 +13,7 @@ import VocabularyBot from './pages/VocabularyBot'
 import VocabularyQuizGame from './pages/VocabularyQuizGame'
 import Paragraph from './pages/Paragraph'
 import WordAssociation from './pages/WordAssociation'
+import Paragraph from  './pages/Paragraph.jsx'
 import VocabularyAnalyzer from './pages/VocabularyAnalyzer'
 import { Toaster } from 'react-hot-toast';
 import { UserProvider, useUser } from './components/UserContext.jsx'
@@ -40,6 +41,12 @@ function AppRoutes() {
         } /><Route path="/paragraph" element={
           <ProtectedRoute>
             <Paragraph />
+          </ProtectedRoute>
+        } />
+
+      <Route path="/paragraph" element={
+          <ProtectedRoute>
+            < Paragraph />
           </ProtectedRoute>
         } />
         <Route path="/dashboard" element={
