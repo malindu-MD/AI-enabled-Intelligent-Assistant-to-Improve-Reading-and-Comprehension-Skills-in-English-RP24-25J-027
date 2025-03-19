@@ -97,6 +97,11 @@ const DashboardOne = () => {
     navigate('/DashboardOne');
     console.log("Exiting game...");
   };
+  const exitGame2= () => {
+    navigate('/paragraph');
+    console.log("Exiting game...");
+  };
+
 
   
   // Initialize a matching game with selected category
@@ -245,7 +250,7 @@ const DashboardOne = () => {
       {/* New buttons for Paragraph, Vocabulary, and Pronunciation */}
       <div className="flex ml-6 space-x-2">
         <button 
-          onClick={() => handleSectionChange('paragraph')} 
+         onClick={exitGame2}
           className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
         >
           <span className="mr-2">📝</span>
