@@ -19,7 +19,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-
+t5-small-finetuned/
 # Virtual Environment
 venv/
 env/
