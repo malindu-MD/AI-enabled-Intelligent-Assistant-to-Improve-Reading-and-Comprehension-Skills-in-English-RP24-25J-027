@@ -16,6 +16,8 @@ import Paragraph from  './pages/Paragraph.jsx'
 import VocabularyAnalyzer from './pages/VocabularyAnalyzer'
 import { Toaster } from 'react-hot-toast';
 import { UserProvider, useUser } from './components/UserContext.jsx'
+import MainLayout from './components/MainLayout.jsx'
+import EnglishLearningHomepage from './pages/EnglishLearningHomepage.jsx'
 
 function AppRoutes() {
   const { user } = useUser();
@@ -29,24 +31,69 @@ function AppRoutes() {
   return (
     <Router>
 
-      <Toaster position="top-right" reverseOrder={false} /> {/* ✅ Add Toaster Here */}
+      <Toaster position="top-right" reverseOrder={false} /> {/* Add Toaster Here */}
       <Routes>
-        <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} />
-        <Route path="/login" element={user ? <Navigate to="/DashboardOne" /> : <LoginForm />} />
-        <Route path="/DashboardOne" element={
+        {/* <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} /> */}
+        
+        <Route path="/login" element={user ? <Navigate to="/homepage" /> : <LoginForm />} />
+  
+      
+      {/* Home Page */}
+
+        <Route path="/" element={
+          
+            < EnglishLearningHomepage />
+         
+        } />
+
+
+      {/* sample page that you can use for add page */}
+
+      <Route path="/sample" element={
           <ProtectedRoute>
-            <DashboardOne />
+            < MainLayout />
           </ProtectedRoute>
         } />
+
+
+
+
+
+
+      {/* bavantha  route Below */}
+
 
       <Route path="/paragraph" element={
           <ProtectedRoute>
             < Paragraph />
           </ProtectedRoute>
         } />
-        <Route path="/dashboard" element={
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+        
+        
+        {/* Malindu Routes Below */}
+        
+        {/* <Route path="/dashboard" element={
           <ProtectedRoute>
             <VocabularyDashboard />
+          </ProtectedRoute>
+        } /> */}
+              
+        <Route path="/DashboardOne" element={
+          <ProtectedRoute>
+            <DashboardOne />
           </ProtectedRoute>
         } />
         <Route path="/game-selection" element={

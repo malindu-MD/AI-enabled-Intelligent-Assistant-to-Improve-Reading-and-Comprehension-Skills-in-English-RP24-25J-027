@@ -5,6 +5,8 @@ import 'firebase/compat/auth';
 import VocabularyAnalyzer from './VocabularyAnalyzer';
 import ContextualVocabularyForm from './ContextualVocabularyForm';
 import { Link,useNavigate  } from "react-router-dom";
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 
 
@@ -219,90 +221,10 @@ const DashboardOne = () => {
    */
 }
 
-<header className="bg-indigo-600 text-white p-4 shadow-md">
-  <div className="flex justify-between items-center">
-    {/* Modified left section to include level */}
-    <div className="flex items-center">
-      {/* <h1 className="text-2xl font-bold">Word Wizard</h1> */}
-     
-      {/* Level indicator - ADD THIS */}
-      <div className={`${
-  student.level === 'level' ? 'bg-gray-600' :
-  student.level === 'Beginner' ? 'bg-blue-600' :
-  student.level === 'Elementary' ? 'bg-green-600' :
-  student.level === 'Intermediate' ? 'bg-yellow-600' :
-  student.level === 'Upper Intermediate' ? 'bg-orange-600' :
-  student.level === 'Advanced' ? 'bg-red-600' :
-  student.level === 'Proficient' ? 'bg-purple-600' : 'bg-gray-600'
-} ml-4 px-3 py-1 rounded-full flex items-center`}>
- 
-  <span>Your Level: <strong>{student.level}</strong> </span>
-  <span className="mr-2">{
-    student.level === 'Beginner' ? '🌱' :
-    student.level === 'Elementary' ? '🌿' :
-    student.level === 'Intermediate' ? '🌾' :
-    student.level === 'Upper Intermediate' ? '🌲' :
-    student.level === 'Advanced' ? '🌳' :
-    student.level === 'Proficient' ? '🌟' : '👤'
-  }</span>
-</div>
-
-      {/* New buttons for Paragraph, Vocabulary, and Pronunciation */}
-      <div className="flex ml-6 space-x-2">
-        <button 
-         onClick={exitGame2}
-          className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
-        >
-          <span className="mr-2">📝</span>
-          <span>Paragraph</span>
-        </button>   
-        
-        <button 
-             onClick={exitGame1}
-          className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
-        >
-          <span className="mr-2">📚</span>
-          <span>Vocabulary</span>
-        </button>
-        <button 
-          onClick={() => handleSectionChange('pronunciation')} 
-          className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
-        >
-          <span className="mr-2">🗣️</span>
-          <span>Pronunciation</span>
-        </button>
-      </div>
-    </div>
-   
-    {/* Right section - unchanged */}
-    <div className="flex items-center space-x-4">
-      <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
-        <span className="mr-2">⭐</span>
-        <span>{student.points} pts</span>
-      </div>
-      <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
-        <span className="mr-2">🔥</span>
-        <span>{student.streak} days</span>
-      </div>
-      <button
-        onClick={() => {
-          setShowPreferences(true);
-          setShowAddWord(false);
-        }}
-        className="bg-indigo-500 px-3 py-1 rounded-full flex items-center hover:bg-indigo-400"
-      >
-        <span className="mr-2">⚙️</span>
-        <span>Preferences</span>
-      </button>
-      <div
-        className="bg-indigo-800 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer"
-        onClick={handleSignOut}
-      >
-        {student.name.charAt(0)}
-      </div>
-    </div>
-  </div>
-</header>
+<Header  student={student}
+  setShowPreferences={setShowPreferences}
+  setShowAddWord={setShowAddWord}
+  handleSignOut={handleSignOut} />
 
 
       {/* Main Content */}
@@ -498,9 +420,7 @@ const DashboardOne = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-indigo-800 text-white p-3 text-center">
-        <p className="text-sm">Personalized vocabulary learning for students at all levels</p>
-      </footer>
+    <Footer text="Personalized vocabulary learning for students at all levels" />
     </div>
   );
 };

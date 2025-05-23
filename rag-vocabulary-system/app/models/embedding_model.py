@@ -39,10 +39,10 @@ def embed_and_store():
         # Upload data to Pinecone with metadata
         batch_upsert(index, embeddings, data, ids, batch_size=100)
 
-        print("✅ All embeddings successfully stored in Pinecone with metadata!")
+        print("All embeddings successfully stored in Pinecone with metadata!")
 
     except Exception as e:
-        print(f"❌ Error occurred: {e}")
+        print(f" Error occurred: {e}")
 
 if __name__ == "__main__":
     embed_and_store()
