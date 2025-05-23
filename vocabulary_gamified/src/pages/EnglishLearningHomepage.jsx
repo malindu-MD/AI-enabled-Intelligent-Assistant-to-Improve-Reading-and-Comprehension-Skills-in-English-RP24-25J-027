@@ -109,7 +109,7 @@ const EnglishLearningHomepage = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <BookOpen className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-xl font-bold text-blue-600">Readify For You</span>
+              <span className="ml-2 text-xl font-bold text-blue-600">Readify</span>
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
