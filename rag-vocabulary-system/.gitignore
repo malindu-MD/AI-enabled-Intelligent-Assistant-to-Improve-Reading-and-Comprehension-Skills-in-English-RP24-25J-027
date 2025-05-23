@@ -59,13 +59,6 @@ dmypy.json
 .env
 .env.*
 
-# Docker
-*.log
-*.pid
-Dockerfile
-docker-compose*.yml
-__docker_cache__/
-*.db
 
 # Uvicorn reload artifacts
 *.reload
