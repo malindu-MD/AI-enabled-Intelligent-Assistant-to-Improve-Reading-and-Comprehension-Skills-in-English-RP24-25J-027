@@ -269,7 +269,7 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
   // Analyze text using the API
   const analyzeText = async (text) => {
     try {
-      const response = await fetch('https://mlmodelvocabulary.azurewebsites.net/predict', {
+      const response = await fetch('http://127.0.0.1:8000/predict', {
         method: 'POST',
         headers: {
           'accept': 'application/json',

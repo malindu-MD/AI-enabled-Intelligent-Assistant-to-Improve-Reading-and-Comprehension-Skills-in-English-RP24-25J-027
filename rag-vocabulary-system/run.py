@@ -81,7 +81,7 @@ def play_game():
     taboo_words = st.text_input("Enter taboo words (comma-separated):", "").split(",")
     
     if st.button("Start Game"):
-        st.session_state.guess_attempts = 0  # Reset attempts
+        st.session_state.guess_attempts = 0  # Reset attempt
         
         # Show taboo words
         st.write(f"Taboo words: {', '.join(taboo_words)}")
