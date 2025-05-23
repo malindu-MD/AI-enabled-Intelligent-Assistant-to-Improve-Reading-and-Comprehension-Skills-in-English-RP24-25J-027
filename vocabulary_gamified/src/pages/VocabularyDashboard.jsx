@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import { Check, X, Search, Plus, Home, BookOpen, Settings } from 'lucide-react';
 
 const VocabularyDashboard = () => {
+
+
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    // Navigate to the 'game-selection' route when the button is clicked
+    navigate('/game-selection')
+  }
+
   // Sample data
   const [data, setData] = useState([
     {
@@ -122,7 +132,7 @@ const VocabularyDashboard = () => {
                 <Plus className="w-5 h-5" />
                 <span>Add Word</span>
               </button>
-              <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-gray-300 transition-colors">
+              <button       onClick={handleClick} className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-gray-300 transition-colors">
                 Play Games →
               </button>
             </div>

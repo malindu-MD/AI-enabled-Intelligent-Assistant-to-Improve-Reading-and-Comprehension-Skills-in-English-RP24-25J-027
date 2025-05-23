@@ -4,7 +4,7 @@ import { Send, RefreshCw, LightbulbIcon, CheckCircle2, Moon, Sun, Info } from 'l
 const TabooGame = () => {
   // Game state
   const [messages, setMessages] = useState([
-    { id: 1, user: 'System', text: 'Welcome to Taboo! Try to describe the word without using any taboo words.', isSystem: true }
+    { id: 1, user: 'System', text: 'Welcome to Word Guess! Try to describe the word without using any related words.', isSystem: true }
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [currentWord, setCurrentWord] = useState(null);
@@ -229,7 +229,7 @@ const startCountdown = () => {
       const tabooMessage = {
         id: messages.length + 2,
         user: 'System',
-        text: 'Oops! You used a taboo word. Try again without those words.',
+        text: 'Oops! You used a realted  word. Try again without those words.',
         isSystem: true
       };
 
@@ -327,7 +327,7 @@ const startCountdown = () => {
       )}
 
 <div className={`${headerBg} p-3 border-b rounded-t-lg text-white flex justify-between items-center`}>
-  <h2 className="text-lg font-semibold">Taboo Vocabulary Game</h2>
+  <h2 className="text-lg font-semibold">Word Guess</h2>
   <div className="flex items-center space-x-4">
     {/* Dark Mode Toggle */}
     <button 

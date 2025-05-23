@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  MoonIcon, 
-  SunIcon, 
-  TimerIcon, 
   LightbulbIcon, 
-  HomeIcon, 
-  TrophyIcon, 
-  HelpCircleIcon 
+  TimerIcon 
 } from 'lucide-react';
 
 // Utility for generating random hints
@@ -46,12 +41,8 @@ const QUESTIONS = [
 ];
 
 const WordAssociationGame = () => {
-  // Theme Management
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
   // Game State
   const [gameStage, setGameStage] = useState('setup');
-  const [selectedProvider, setSelectedProvider] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
   
   // Game Mechanics
@@ -74,12 +65,6 @@ const WordAssociationGame = () => {
   const showToast = (type, message, description = '') => {
     setToast({ type, message, description });
     setTimeout(() => setToast(null), 3000);
-  };
-
-  // Toggle Theme
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark', !isDarkMode);
   };
 
   // Timer Logic
@@ -181,68 +166,67 @@ const WordAssociationGame = () => {
     );
   };
 
-  // Navigation Bar Component
-  const Navbar = () => (
-    <nav className="flex justify-between items-center p-4 bg-gray-100 dark:bg-gray-800">
-      <div className="flex items-center space-x-4">
-        <HomeIcon className="h-6 w-6 dark:text-white" />
-        <TrophyIcon className="h-6 w-6 dark:text-white" />
-        <HelpCircleIcon className="h-6 w-6 dark:text-white" />
-      </div>
-      <div className="flex items-center space-x-4">
-        <button 
-          onClick={toggleTheme} 
-          className="text-gray-600 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 p-2 rounded-full"
-        >
-          {isDarkMode ? <SunIcon /> : <MoonIcon />}
-        </button>
-      </div>
-    </nav>
-  );
-
   // Setup Stage
   if (gameStage === 'setup') {
     return (
-      <div className={`min-h-screen ${isDarkMode ? 'dark bg-gray-900 text-white' : ''}`}>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         {toast && <ToastComponent {...toast} />}
-        <Navbar />
-        <div className="container mx-auto px-4 py-8">
-          <div className="w-full max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold text-center mb-6">Word Association Challenge</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block mb-2 text-sm font-medium">Test Provider</label>
-                <select 
-                  value={selectedProvider} 
-                  onChange={(e) => setSelectedProvider(e.target.value)}
-                  className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600"
-                >
-                  <option value="">Select Provider</option>
-                  <option value="Verbal Reasoning">Verbal Reasoning</option>
-                  <option value="Linguistic Challenge">Linguistic Challenge</option>
-                </select>
-              </div>
+        <div className="w-full max-w-5xl bg-white shadow-2xl rounded-3xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
+          {/* Animated Header */}
+          <div className="p-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20 bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-800 animate-pulse"></div>
+            <h1 className="text-4xl font-extrabold text-white text-center relative z-10 tracking-tight">
+              Word Association Challenge
+            </h1>
+            <p className="text-center text-white/80 mt-2 relative z-10">
+              Test your linguistic skills and word connections
+            </p>
+          </div>
 
+          {/* Game Setup */}
+          <div className="p-8">
+            <div className="space-y-6 max-w-md mx-auto">
               <div>
-                <label className="block mb-2 text-sm font-medium">Difficulty</label>
-                <select 
-                  value={selectedDifficulty} 
-                  onChange={(e) => setSelectedDifficulty(e.target.value)}
-                  className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600"
-                >
-                  <option value="">Select Difficulty</option>
-                  <option value="Easy">Easy</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Hard">Hard</option>
-                </select>
+                <label className="block mb-2 text-lg font-semibold text-indigo-900">Difficulty Level</label>
+                <div className="grid grid-cols-3 gap-4">
+                  {['Easy', 'Medium', 'Hard'].map((difficulty) => (
+                    <button
+                      key={difficulty}
+                      onClick={() => setSelectedDifficulty(difficulty)}
+                      className={`
+                        p-4 rounded-lg text-center font-bold transition-all duration-500
+                        ${selectedDifficulty === difficulty 
+                          ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-2xl' 
+                          : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}
+                      `}
+                    >
+                      {difficulty}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <button 
                 onClick={startGame} 
-                disabled={!selectedProvider || !selectedDifficulty}
-                className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                disabled={!selectedDifficulty}
+                className="
+                  w-full p-4 
+                  bg-gradient-to-r from-indigo-600 to-purple-600
+                  text-white 
+                  rounded-full 
+                  text-lg 
+                  font-bold
+                  hover:from-indigo-700 hover:to-purple-700 
+                  transition-all 
+                  duration-500
+                  transform
+                  hover:-translate-y-1
+                  shadow-xl
+                  hover:shadow-2xl
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                "
               >
-                Start Game
+                Begin Challenge
               </button>
             </div>
           </div>
@@ -254,15 +238,43 @@ const WordAssociationGame = () => {
   // Game Over Stage
   if (gameStage === 'gameOver') {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'dark bg-gray-900 text-white' : ''}`}>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         {toast && <ToastComponent {...toast} />}
-        <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-center mb-6">Game Over</h2>
-          <div className="text-center space-y-4">
-            <p className="text-2xl font-bold">Your Score: {score}</p>
+        <div className="w-full max-w-5xl bg-white shadow-2xl rounded-3xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
+          {/* Animated Header */}
+          <div className="p-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20 bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-800 animate-pulse"></div>
+            <h1 className="text-4xl font-extrabold text-white text-center relative z-10 tracking-tight">
+              Game Over
+            </h1>
+          </div>
+
+          {/* Score Display */}
+          <div className="p-8 text-center space-y-6">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-2xl shadow-lg">
+              <p className="text-3xl font-bold text-indigo-900 mb-4">Your Final Score</p>
+              <div className="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                {score}
+              </div>
+            </div>
+
             <button 
               onClick={restartGame}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="
+                px-8 py-4 
+                bg-gradient-to-r from-indigo-600 to-purple-600
+                text-white 
+                rounded-full 
+                text-lg 
+                font-bold
+                hover:from-indigo-700 hover:to-purple-700 
+                transition-all 
+                duration-500
+                transform
+                hover:-translate-y-1
+                shadow-xl
+                hover:shadow-2xl
+              "
             >
               Play Again
             </button>
@@ -274,20 +286,27 @@ const WordAssociationGame = () => {
 
   // Playing Stage
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'dark bg-gray-900 text-white' : ''}`}>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       {toast && <ToastComponent {...toast} />}
-      <Navbar />
-      <div className="container mx-auto px-4 py-8">
-        <div className="w-full max-w-md mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex items-center space-x-2">
-              <TimerIcon className="h-5 w-5" />
-              <span>{timeLeft} seconds</span>
+      <div className="w-full max-w-5xl bg-white shadow-2xl rounded-3xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
+        {/* Game Header */}
+        <div className="p-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-20 bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-800 animate-pulse"></div>
+          <div className="flex justify-between items-center relative z-10">
+            <div className="flex items-center space-x-2 text-white">
+              <TimerIcon className="h-6 w-6" />
+              <span className="text-lg font-bold">{timeLeft} seconds</span>
             </div>
-            <span className="font-bold">Score: {score}</span>
+            <div className="text-white text-lg font-bold">
+              Score: {score}
+            </div>
           </div>
-          <div className="space-y-4">
-            <div className="text-center text-xl font-bold mb-4">
+        </div>
+
+        {/* Game Content */}
+        <div className="p-8">
+          <div className="max-w-md mx-auto space-y-6">
+            <div className="text-center text-2xl font-bold text-indigo-900 bg-indigo-50 p-4 rounded-lg">
               {currentQuestion.words.join(' | ')}
             </div>
 
@@ -296,7 +315,21 @@ const WordAssociationGame = () => {
                 <button 
                   key={option} 
                   onClick={() => handleAnswer(option)}
-                  className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="
+                    w-full p-4 
+                    bg-gradient-to-r from-blue-500 to-indigo-600
+                    text-white 
+                    rounded-lg 
+                    text-lg 
+                    font-bold
+                    hover:from-blue-600 hover:to-indigo-700 
+                    transition-all 
+                    duration-500
+                    transform
+                    hover:-translate-y-1
+                    shadow-lg
+                    hover:shadow-xl
+                  "
                 >
                   {option}
                 </button>
@@ -305,18 +338,32 @@ const WordAssociationGame = () => {
 
             <button 
               onClick={generateHintForQuestion}
-              className="w-full p-2 border rounded dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="
+                w-full p-4 
+                bg-gradient-to-r from-purple-500 to-pink-600
+                text-white 
+                rounded-lg 
+                text-lg 
+                font-bold
+                hover:from-purple-600 hover:to-pink-700 
+                transition-all 
+                duration-500
+                transform
+                hover:-translate-y-1
+                shadow-lg
+                hover:shadow-xl
+                disabled:opacity-50 disabled:cursor-not-allowed
+                flex items-center justify-center
+              "
               disabled={hintsUsed >= 3}
             >
-              <div className="flex items-center justify-center">
-                <LightbulbIcon className="mr-2 h-5 w-5" /> 
-                Get Hint ({3 - hintsUsed} remaining)
-              </div>
+              <LightbulbIcon className="mr-2 h-6 w-6" /> 
+              Get Hint ({3 - hintsUsed} remaining)
             </button>
 
             {currentHint && (
-              <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-700 rounded">
-                <p className="text-sm">{currentHint}</p>
+              <div className="mt-4 p-4 bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg shadow-md">
+                <p className="text-sm text-indigo-900">{currentHint}</p>
               </div>
             )}
           </div>
