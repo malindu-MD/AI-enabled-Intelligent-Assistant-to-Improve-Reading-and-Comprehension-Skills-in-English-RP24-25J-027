@@ -21,7 +21,7 @@
 
 ### **Sooriyaarachchi M.D.A - IT21173790**  
 ## System Diagram(AI-Powered Gaming English Vocabulary Improvement Module)
-![My Image](images/malindu_sys.png)
+![My Image](images/vc.png)
 
 - [ ] Designed and implemented frontend interfaces.  
 - [ ] Worked on responsive and user-friendly UI/UX designs.  
