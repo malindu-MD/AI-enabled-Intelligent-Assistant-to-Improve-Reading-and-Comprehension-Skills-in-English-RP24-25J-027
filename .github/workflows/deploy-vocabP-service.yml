@@ -24,7 +24,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Build Docker Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/vocabpredictservice:latest ./vocabpredictservice
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/vocabpredictservice:latest ./VocabPredictService
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
@@ -35,6 +35,7 @@ jobs:
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/vocabpredictservice:latest
 
+      # Uncomment and configure the following if deploying to AWS ECS:
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v2
       #   with:
