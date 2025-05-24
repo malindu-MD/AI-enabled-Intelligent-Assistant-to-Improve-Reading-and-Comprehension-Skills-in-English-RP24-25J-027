@@ -16,8 +16,11 @@ import Paragraph from  './pages/Paragraph.jsx'
 import VocabularyAnalyzer from './pages/VocabularyAnalyzer'
 import { Toaster } from 'react-hot-toast';
 import { UserProvider, useUser } from './components/UserContext.jsx'
+import UserDetails from './pages/UserDetails'
+import MCQAssessment from './components/MCQAssessment.jsx'
 import MainLayout from './components/MainLayout.jsx'
 import EnglishLearningHomepage from './pages/EnglishLearningHomepage.jsx'
+
 
 function AppRoutes() {
   const { user } = useUser();
@@ -33,7 +36,10 @@ function AppRoutes() {
 
       <Toaster position="top-right" reverseOrder={false} /> {/* Add Toaster Here */}
       <Routes>
-        {/* <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} /> */}
+
+        <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} />
+        <Route path="/login" element={user ? <Navigate to="/DashboardOne" /> : <LoginForm />} />
+        <Route path="/user-details" element={<UserDetails />} />     
         
         <Route path="/login" element={user ? <Navigate to="/homepage" /> : <LoginForm />} />
   
@@ -53,7 +59,8 @@ function AppRoutes() {
           <ProtectedRoute>
             < MainLayout />
           </ProtectedRoute>
-        } /><Route path="/paragraph" element={
+        } />
+        <Route path="/paragraph" element={
           <ProtectedRoute>
             <Paragraph />
           </ProtectedRoute>
@@ -120,6 +127,12 @@ function AppRoutes() {
             <TabooVocabularyGame />
           </ProtectedRoute>
         } />
+        <Route path="/mcq" element={
+          <ProtectedRoute>
+            <MCQAssessment />
+          </ProtectedRoute>
+        } />
+
         <Route path="/vocabulary-game-quiz" element={
           <ProtectedRoute>
             <VocabularyQuizGame />
