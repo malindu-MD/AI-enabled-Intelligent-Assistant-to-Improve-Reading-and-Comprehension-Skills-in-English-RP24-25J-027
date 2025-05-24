@@ -24,7 +24,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Build Docker Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/VocabPredictService:latest ./VocabPredictService
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/vocabpredictservice:latest ./vocabpredictservice
 
       - name: Login to DockerHub
         uses: docker/login-action@v3
@@ -33,7 +33,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/VocabPredictService:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/vocabpredictservice:latest
 
       # - name: Configure AWS Credentials
       #   uses: aws-actions/configure-aws-credentials@v2
