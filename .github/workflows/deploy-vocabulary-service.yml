@@ -42,9 +42,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Deploy to ECS
+      - name: Force new deployment of ECS service
         run: |
           aws ecs update-service \
             --cluster research-project-deploy \
             --service peronalize-vocabulary-service--service- \
             --force-new-deployment
+
+
+
+
+    
+
+
+
