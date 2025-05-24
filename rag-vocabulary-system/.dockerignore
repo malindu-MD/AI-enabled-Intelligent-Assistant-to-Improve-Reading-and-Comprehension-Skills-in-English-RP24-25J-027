@@ -1,0 +1,57 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Pytest cache
+.pytest_cache/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code settings
+.vscode/
+
+# Dockerfile build cache
+docker-compose.override.yml
+
+# Environment variables and virtual environments
+.env
+venv/
+env/
+ENV/
+
+# Git files
+.git
+.gitignore
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# Others
+.DS_Store
+*.swp
+*.swo
