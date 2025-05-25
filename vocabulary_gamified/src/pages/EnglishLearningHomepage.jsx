@@ -294,8 +294,8 @@ const EnglishLearningHomepage = () => {
                   <span>Real-world conversations</span>
                 </div>
               </div>
-              <button className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
-                Start Speaking <ChevronRight size={16} className="ml-1" />
+              <button onClick={() => navigate('/pronounce-startup')} className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
+                Practice Pronunciation <ChevronRight size={16} className="ml-1" />
               </button>
             </div>
 
