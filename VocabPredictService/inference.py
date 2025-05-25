@@ -10,7 +10,7 @@ genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 
 
 MIN_CONFIDENCE = 0.7
-K = 2
+K = 1
 LABELS = {
     0.0: "A1", 0.5: "A1+", 1.0: "A2", 1.5: "A2+",
     2.0: "B1", 2.5: "B1+", 3.0: "B2", 3.5: "B2+",

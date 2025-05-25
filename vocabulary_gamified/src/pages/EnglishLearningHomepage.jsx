@@ -1,18 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight } from 'lucide-react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight, User, LogOut, Settings, ChevronDown } from 'lucide-react';
+import firebase from 'firebase/compat/app';
 import HomePageHeader from '../components/HomePageHeader';
-// import PhonemePageStartup from './PronouncePageStartup';
-
-
+import 'firebase/compat/auth';
+import { Link,useNavigate } from 'react-router-dom';
+import { useUser } from '../components/UserContext';
 const EnglishLearningHomepage = () => {
+  const navigate = useNavigate();
   const [showTour, setShowTour] = useState(false);
   const [tourStep, setTourStep] = useState(0);
   const [isVisible, setIsVisible] = useState({});
-  const navigate = useNavigate();
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+    const { user,setUser } = useUser();
+  // Mock user data for demonstration
 
+  const dropdownRef = useRef(null);
 
+  console.log('user', user);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     // Check if user is new (simulate with setTimeout for demo)
@@ -60,6 +79,34 @@ const EnglishLearningHomepage = () => {
 
   const skipTour = () => {
     setShowTour(false);
+    console.log('sss', user);
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      setUser(null);
+      setShowProfileDropdown(false);
+      alert('Logged out successfully!');
+    }
+  };
+
+  const handleSettings = () => {
+    setShowProfileDropdown(false);
+    alert('Navigate to Settings page');
+  };
+
+  const handleProfile = () => {
+    setShowProfileDropdown(false);
+    alert('Navigate to Profile page');
+  };
+
+  const handleLogin = () => {
+   window.location.href = '/login';
+  };
+
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
   const TourOverlay = () => {
@@ -112,32 +159,7 @@ const EnglishLearningHomepage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Navigation */}
-      {/* <nav className="bg-white shadow-lg sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <BookOpen className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-xl font-bold text-blue-600">Readify</span>
-            </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                <a href="#" className="text-blue-600 hover:text-blue-800 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Courses</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Progress</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Community</a>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                Sign Up
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav> */}
-
       <HomePageHeader/>
-
       {/* Hero Section */}
       <section id="hero" className={`relative py-20 px-4 sm:px-6 lg:px-8 ${showTour && tourSteps[tourStep].target === 'hero' ? 'ring-4 ring-blue-400' : ''}`}>
         <div className="max-w-7xl mx-auto text-center">
@@ -183,27 +205,25 @@ const EnglishLearningHomepage = () => {
                 <h3 className="text-2xl font-bold text-gray-900 ml-4">Vocabulary Improvement</h3>
               </div>
               <p className="text-gray-600 mb-6">
-                Expand your word power with our interactive vocabulary builder. Learn new words through 
-                engaging games, contextual examples, and spaced repetition techniques.
+               Enhance your English vocabulary with our intelligent, personalized learning module. This AI-powered tool adapts to your skill level using CEFR classification and offers gamified activities that make learning fun and effective.
               </p>
+
+    
               <div className="space-y-3 mb-6">
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>10,000+ words across all levels</span>
+                  <span>Real-time Your Vocabulary proficiency assessment</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Interactive flashcards and games</span>
+                  <span>Personalized vocabulary games based on your level</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Real-world usage examples</span>
+                  <span>7000+ CEFR-aligned words across diverse topics</span>
                 </div>
               </div>
-              <button
-              onClick={() => navigate('/DashboardOne')}
-              className="flex items-center text-blue-600 hover:text-blue-800 font-semibold"
-              >    
+              <button className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
                 Explore Vocabulary <ChevronRight size={16} className="ml-1" />
               </button>
             </div>
@@ -214,28 +234,37 @@ const EnglishLearningHomepage = () => {
                 <div className="bg-green-100 p-3 rounded-full">
                   <Target className="h-8 w-8 text-green-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 ml-4">Grammar Mastery</h3>
+                <h3 className="text-2xl font-bold text-gray-900 ml-4">Comprehension Practice</h3>
               </div>
               <p className="text-gray-600 mb-6">
-                Master English grammar with our step-by-step approach. From basics to advanced concepts, 
-                with plenty of practice exercises and instant feedback.
-              </p>
+              Develop fundamental reading skills with leveled passages, comprehension questions, and vocabulary in context.    </p>
               <div className="space-y-3 mb-6">
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Complete grammar curriculum</span>
+                  <span>Personalize Content</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Interactive exercises & quizzes</span>
+                  <span>Literacy Development</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Instant error correction</span>
+                  <span>Comprehension Skills</span>
                 </div>
               </div>
-              <button className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
-                Practice Grammar <ChevronRight size={16} className="ml-1" />
+              <button 
+                onClick={() => {
+                  console.log('Grammar button clicked', user);
+                  console.log('user', user);
+                  if (user?.isNew) {
+                    navigate('/user-details')
+                  } else {
+                   navigate('/paragraph')
+                  }
+                }} 
+                className="flex items-center text-blue-600 hover:text-blue-800 font-semibold"
+              >
+                Practice Quiz <ChevronRight size={16} className="ml-1" />
               </button>
             </div>
 
