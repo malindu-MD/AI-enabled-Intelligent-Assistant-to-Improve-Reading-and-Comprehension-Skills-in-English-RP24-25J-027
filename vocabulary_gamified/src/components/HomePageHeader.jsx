@@ -11,7 +11,7 @@ const HomePageHeader = () => {
 
 
     const {user,setUser}=useUser();
-
+  
     const handleSignOut = () => {
       firebase.auth().signOut();
       setUser(null);

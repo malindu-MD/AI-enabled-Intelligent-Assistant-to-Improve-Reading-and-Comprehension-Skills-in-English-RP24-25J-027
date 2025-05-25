@@ -112,7 +112,7 @@ const EnglishLearningHomepage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Navigation */}
-      {/* <nav className="bg-white shadow-lg sticky top-0 z-40">
+      <nav className="bg-white shadow-lg sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
@@ -134,9 +134,9 @@ const EnglishLearningHomepage = () => {
             </div>
           </div>
         </div>
-      </nav> */}
+      </nav>
 
-      <HomePageHeader/>
+
 
      
 
