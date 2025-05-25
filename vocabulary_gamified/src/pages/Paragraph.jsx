@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../components/UserContext';
 import { ref, get, set, update } from "firebase/database";
 import { initializeRealtimeDB } from "../config/firebaseConfig";
-import { Link,useNavigate  } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const DashboardOne = () => {
@@ -13,8 +13,8 @@ const DashboardOne = () => {
   const [student, setStudent] = useState({
     name: "Alex Chen",
     level: user?.level || 'Beginner',  // Use optional chaining and default value
-    points: 780,
-    streak: 5,
+    points: 0,
+    streak: 0,
     preferences: {
       gameStyles: [],
       categories: ["academic", "technology", "literature"],
@@ -22,7 +22,11 @@ const DashboardOne = () => {
       learningStyle: "visual",
       dailyGoal: 10,
       reviewFrequency: "daily"
-    }
+    },
+    correctCount:0,
+    incorrectCount:0,
+    averageTime:0,
+    questionCount:0,
   });
 
  
@@ -98,7 +102,12 @@ const DashboardOne = () => {
       if (snapshot.exists()) {
         console.log('snapshot.val()', snapshot.val());
         const userData = snapshot.val();
-        console.log('userData', userData);
+      setStudent(prev => ({
+          preferences:{
+            gameStyles:userData.topics
+          }
+        }));
+        console.log('userDatssa', userData);
         let leveld;
         if(userData.level==='1'){
           leveld='Beginner';
@@ -116,8 +125,12 @@ const DashboardOne = () => {
           streak: userData.streak || 4,
           level: leveld || 'Beginner',
           gameModes: userData.topics || gameModes,
+          correctCount:userData.correctCount || 0,
+          incorrectCount:userData.incorrectCount || 0,
+          averageTime:userData.averageTime || 0,
+          questionCount:userData.questionCount || 0,
         }));
-       
+       console.log('studentssds',student)
       }
     }).catch(error => {
       console.error("Error fetching user data:", error);
@@ -176,6 +189,28 @@ const fetchReadingContent = async () => {
     setIsLoading(false);
   }
 };
+const updategameStyleToFirebase = async (topics)=>{
+
+  const email = user.validKey;
+  const db = initializeRealtimeDB();
+  const userRef = ref(db, `userdata/${email}`);
+  const userData = {
+    topics: topics,
+  };
+
+  try {
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+      await update(userRef, userData);
+      console.log("User updated successfully");
+    } else {
+      await set(userRef, userData);
+      console.log("New user created successfully");
+    }
+  } catch (error) {
+    console.error("Error updating user:", error);
+  }
+}
   // Handle selecting an answer for MCQs
   const handleAnswerSelect = (questionId, optionIndex) => {
     setUserAnswers(prev => ({
@@ -364,10 +399,38 @@ const fetchReadingContent = async () => {
       {/* Header */}
       <header className="bg-indigo-600 text-white p-4 shadow-md">
         <div className="flex justify-between items-center">
+          <Link to="/" className="bg-indigo-500 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-full flex items-center shadow-md mr-4">
+            <span className="mr-2">🏠</span><span>Home</span>
+          </Link>
 
           
-          {/* <h1 className="text-2xl font-bold">Read Now</h1> */}
-          <div className={`${
+        
+          <div className="flex ml-6 space-x-2">
+      
+      </div>
+          <div className="flex items-center space-x-4">
+
+     
+            <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
+              <span className="mr-2">⭐</span>
+              <span>{student.points} pts</span>
+            </div>
+            <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
+              <span className="mr-2">🔥</span>
+              <span>{student.streak} days</span>
+            </div>
+            
+            <button 
+              onClick={() => {
+                setShowPreferences(true);
+                setShowAddWord(false);
+              }}
+              className="bg-indigo-500 px-3 py-1 rounded-full flex items-center hover:bg-indigo-400"
+            >
+              <span className="mr-2">⚙️</span>
+              <span>Preferences</span>
+            </button>
+            <div className={`${
   student.level === 'level' ? 'bg-gray-600' :
   student.level === 'Beginner' ? 'bg-blue-600' :
   student.level === 'Elementary' ? 'bg-green-600' :
@@ -387,64 +450,8 @@ const fetchReadingContent = async () => {
     student.level === 'Proficient' ? '🌟' : '👤'
   }</span>
 </div>
-
-
-          <div className="flex ml-6 space-x-2">
-        {/* <button 
-        
-        onClick={exitGame2}  
-        className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
-        >
-          <span className="mr-2">📝</span>
-          <span>Paragraph</span>
-        </button>    */}
-        
-        {/* <button 
-             onClick={exitGame1}
-          className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
-        >
-          <span className="mr-2">📚</span>
-          <span>Vocabulary</span>
-        </button> */}
-        {/* <button 
-        
-          className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
-        >
-          <span className="mr-2">🗣️</span>
-          <span>Pronunciation</span>
-        </button> */}
-      </div>
-          <div className="flex items-center space-x-4">
-
-     
-            <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
-              <span className="mr-2">⭐</span>
-              <span>{student.points} pts</span>
-            </div>
-            <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
-              <span className="mr-2">🔥</span>
-              <span>{student.streak} days</span>
-            </div>
-            <button 
-              onClick={() => {
-                setShowPreferences(true);
-                setShowAddWord(false);
-              }}
-              className="bg-indigo-500 px-3 py-1 rounded-full flex items-center hover:bg-indigo-400"
-            >
-              <span className="mr-2">⚙️</span>
-              <span>Preferences</span>
-            </button>
-            {/* <div 
-              className="bg-indigo-800 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer"
-              onClick={() => {
-                setShowPreferences(false);
-                setShowAddWord(false);
-              }}
-            >
-              {student.name.charAt(0)}
-            </div> */}
           </div>
+         
         </div>
       </header>
 
@@ -477,7 +484,8 @@ const fetchReadingContent = async () => {
                           const updatedStyles = student.preferences.gameStyles.includes(game.id)
                             ? student.preferences.gameStyles.filter(style => style !== game.id)
                             : [...student.preferences.gameStyles, game.id];
-                            
+                            console.log('updatedStyles', updatedStyles);
+                            updategameStyleToFirebase(updatedStyles);
                           setStudent({
                             ...student,
                             preferences: {
@@ -775,15 +783,32 @@ const fetchReadingContent = async () => {
               </div>
             </div>
             
-              {/* Welcome section */}
+              {/* Welcome section with a correctCount:0,
+    incorrectCount:0,
+    averageTime:0,
+    questionCount:0,nalytics */}
             <div className="bg-white rounded-lg p-6 shadow-md mb-6">
               <h2 className="text-xl font-bold text-indigo-800 mb-2">Hello, {user?.email || "Guest"}!</h2>
-              <p className="text-gray-600">Continue Improve Your Reading skills</p>
-              <div className="mt-4 mb-4 bg-indigo-100 p-3 rounded-md">
-                <h3 className="font-semibold text-indigo-800">Today's Challenge:</h3>
-                <p className="text-indigo-600">Learn {student.preferences.dailyGoal} new words to earn 100 bonus points</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div className="bg-indigo-50 p-3 rounded-lg">
+                  <p className="text-sm text-indigo-600">Total Questions</p>
+                  <p className="text-xl font-bold">{student?.questionCount || 0}</p>
+                </div>
+                <div className="bg-green-50 p-3 rounded-lg">
+                  <p className="text-sm text-green-600">Correct Answers</p>
+                  <p className="text-xl font-bold">{student?.correctCount || 0}</p>
+                </div>
+                <div className="bg-red-50 p-3 rounded-lg">
+                  <p className="text-sm text-red-600">Wrong Answers</p>
+                  <p className="text-xl font-bold">{student?.incorrectCount || 0}</p>
+                </div>
+                <div className="bg-yellow-50 p-3 rounded-lg">
+                  <p className="text-sm text-yellow-600">Avg Time (sec)</p>
+                  <p className="text-xl font-bold">{student?.averageTime ? Math.round(student.averageTime) : 0}</p>
+                </div>
               </div>
-              <button 
+            
+              {/* <button 
                 className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
                 onClick={() => {
                   setShowAddWord(true);
@@ -791,7 +816,7 @@ const fetchReadingContent = async () => {
                 }}
               >
                 + Add Your Difficult Words
-              </button>
+              </button> */}
               
             </div>
 
