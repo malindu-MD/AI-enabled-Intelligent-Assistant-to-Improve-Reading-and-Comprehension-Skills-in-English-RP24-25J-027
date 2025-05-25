@@ -3,7 +3,6 @@ import { useUser } from './UserContext';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight, Check, Zap, Crown, Gift } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 
@@ -12,7 +11,6 @@ const HomePageHeader = () => {
 
 
     const {user,setUser}=useUser();
-    const navigate = useNavigate();
 
     const handleSignOut = () => {
       firebase.auth().signOut();
@@ -45,9 +43,9 @@ const HomePageHeader = () => {
             </div>
             <div className="hidden md:block">
               <Link to="/" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Home</Link>
-              <Link to="/EnglishLearningAboutPage" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">About US</Link>
+              {/* <Link to="/EnglishLearningAboutPage" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">About US</Link>
               <Link to="/EnglishPricePlan" className="text-blue-600 hover:text-blue-800 px-3 py-2 rounded-md text-sm font-medium">Pricing</Link>
-              <Link to="/community" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Community</Link>
+              <Link to="/community" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Community</Link> */}
             </div>
             <div className="flex items-center space-x-4">
               <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">

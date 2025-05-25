@@ -54,14 +54,14 @@ function AppRoutes() {
           
             < EnglishPricePlan />
          
-        } />
+        } /> */}
 
-         <Route path="/EnglishLearningAboutPage" element={
+         {/* <Route path="/EnglishLearningAboutPage" element={
           
             < EnglishLearningAboutPage />
          
-        } />
- */}
+        } /> */}
+
 
 
 
