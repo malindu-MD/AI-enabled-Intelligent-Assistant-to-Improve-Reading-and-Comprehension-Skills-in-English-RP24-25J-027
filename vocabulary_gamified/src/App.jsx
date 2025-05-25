@@ -19,6 +19,8 @@ import { UserProvider, useUser } from './components/UserContext.jsx'
 import MainLayout from './components/MainLayout.jsx'
 import EnglishLearningHomepage from './pages/EnglishLearningHomepage.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
+import EnglishPricePlan from './pages/EnglishPricePlan.jsx'
+import EnglishLearningAboutPage from './pages/EnglishLearningAboutPage.jsx'
 
 function AppRoutes() {
   const { user } = useUser();
@@ -46,6 +48,22 @@ function AppRoutes() {
             < EnglishLearningHomepage />
          
         } />
+        \
+        
+        <Route path="/EnglishPricePlan" element={
+          
+            < EnglishPricePlan />
+         
+        } />
+
+         <Route path="/EnglishLearningAboutPage" element={
+          
+            < EnglishLearningAboutPage />
+         
+        } />
+
+
+
 
 
       {/* sample page that you can use for add page */}
