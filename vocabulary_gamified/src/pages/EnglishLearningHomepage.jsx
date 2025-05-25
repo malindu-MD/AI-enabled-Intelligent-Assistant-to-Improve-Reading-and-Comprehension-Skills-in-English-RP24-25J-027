@@ -205,21 +205,22 @@ const EnglishLearningHomepage = () => {
                 <h3 className="text-2xl font-bold text-gray-900 ml-4">Vocabulary Improvement</h3>
               </div>
               <p className="text-gray-600 mb-6">
-                Expand your word power with our interactive vocabulary builder. Learn new words through 
-                engaging games, contextual examples, and spaced repetition techniques.
+               Enhance your English vocabulary with our intelligent, personalized learning module. This AI-powered tool adapts to your skill level using CEFR classification and offers gamified activities that make learning fun and effective.
               </p>
+
+    
               <div className="space-y-3 mb-6">
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>10,000+ words across all levels</span>
+                  <span>Real-time Your Vocabulary proficiency assessment</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Interactive flashcards and games</span>
+                  <span>Personalized vocabulary games based on your level</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Real-world usage examples</span>
+                  <span>7000+ CEFR-aligned words across diverse topics</span>
                 </div>
               </div>
               <button className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
