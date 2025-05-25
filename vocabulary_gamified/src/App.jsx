@@ -23,9 +23,14 @@ import EnglishLearningHomepage from './pages/EnglishLearningHomepage.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import EnglishPricePlan from './pages/EnglishPricePlan.jsx'
 import EnglishLearningAboutPage from './pages/EnglishLearningAboutPage.jsx'
 
+=======
+import PronunciationComparison from './pages/PhonemeComparison.jsx' 
+import PronounceStartup from './pages/PronouncePageStartup.jsx' // Assuming this is the correct import for PronunciationComparison
+>>>>>>> parent of 4228dae (Merge branch 'main' into AS-01)
 =======
 import PronunciationComparison from './pages/PhonemeComparison.jsx' 
 import PronounceStartup from './pages/PronouncePageStartup.jsx' // Assuming this is the correct import for PronunciationComparison
