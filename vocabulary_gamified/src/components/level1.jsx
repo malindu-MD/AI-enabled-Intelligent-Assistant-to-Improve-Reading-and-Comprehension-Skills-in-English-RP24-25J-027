@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { ref, get, set, update } from "firebase/database";
 import { initializeRealtimeDB } from "../config/firebaseConfig";
 import EmotionCapture from "./EmotionCapture";
-import { useUser } from '../components/UserContext';
+import { useUser } from './UserContext';
 import { useNavigate } from "react-router-dom";
 
-const MCQAssessment = () => {
+const MCQAssessment2= () => {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
   const [assessmentComplete, setAssessmentComplete] = useState(false);
@@ -15,6 +15,7 @@ const MCQAssessment = () => {
   const [finalEmotion, setFinalEmotion] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [roundScore,setRoundScore]=useState(0);
 
   useEffect(() => {
     console.log("Fetching user and generating questions...");
@@ -34,7 +35,7 @@ const MCQAssessment = () => {
 
         // Generate prompt for Gemini
         const prompt = `
-You are an expert reading comprehension tutor. Based on this student's current level (${userLevel}) and their past error pattern analysis, generate 3 multiple choice comprehension questions with 3 options each. Each question should include:
+You are an expert reading comprehension tutor. Based on this student's current level (cefr A1) and their past error pattern analysis, generate 3 multiple choice comprehension questions with 3 options each. Each question should include:
 
 1. A short paragraph (3-5 sentences).
 2. One question based on the paragraph.
@@ -303,6 +304,7 @@ Required Output Format:
         
         const result = await response.json();
         levelPrediction=result;
+        setRoundScore(result.final_score);
         console.log("Level Prediction:", result);
       } else {
         console.warn('No valid emotion data found');
@@ -377,20 +379,18 @@ Required Output Format:
           console.error('Error saving error pattern:', error);
         });
       }
-      console.log('sdscfds',email);
+   
       // Update user data
       const userRef = ref(db, `userdata/${email}`);
       
       try {
         const snapshot = await get(userRef);
         let valueget =snapshot.val();
-        console.log("Value:", valueget);
         let correctCount = 0;
         let incorrectCount = 0;
         let timeSpent = userAnswers.q1.timeSpent + userAnswers.q2.timeSpent + userAnswers.q3.timeSpent;
-        console.log("Time Spent:", valueget.totalTime);
-        let avg=(valueget.totalTime+timeSpent)/(valueget.questionCount+3);
-console.log("Average:", avg);
+        let avg=(timeSpent)/(3);
+        console.log("Average:", avg);
 
        // Calculate correct and incorrect answers based on userAnswers
        // Calculate correct and incorrect answers based on userAnswers
@@ -414,12 +414,13 @@ console.log("Average:", avg);
         console.log("Incorrect Count:", incorrectCount);
         console.log("Levessssssl Prediction:", userAnswers);
         const userData = {
-          totalPoints: valueget.totalPoints+levelPrediction.final_score,
-          correctCount: valueget.correctCount+correctCount,
-          incorrectCount: valueget.incorrectCount+incorrectCount,
-          questionCount: valueget.incorrectCount+incorrectCount+correctCount,
+          totalPoints: levelPrediction.final_score,
+          correctCount: correctCount,
+          incorrectCount: incorrectCount,
+          questionCount: incorrectCount+correctCount,
           averageTime: avg,
-          totalTime: valueget.totalTime+timeSpent,
+          level:1,
+          totalTime: timeSpent,
           lastAttempt: new Date().toISOString()
         };
       
@@ -438,6 +439,19 @@ console.log("Average:", avg);
       console.error("Error analyzing emotions with Gemini:", error);
     }
   };
+  const nextRoundDecider = () => {
+    console.log("Round Score:", roundScore);
+    if (roundScore < 2) {
+      setUser({
+        isNew:false,
+        validKey:user.validKey,
+      })
+      navigate('/paragraph')
+      
+    }else{
+      navigate('/mcq3')
+    }
+  }
 
   if (loading) {
     return (
@@ -555,7 +569,7 @@ console.log("Average:", avg);
                 </p>
               </div>
               <button
-                onClick={() => navigate('/paragraph')}
+                onClick={nextRoundDecider}
                 className="bg-indigo-600 text-white py-3 px-6 rounded-lg font-medium text-lg hover:bg-indigo-700"
               >
                 Go Back to Reading
@@ -568,4 +582,4 @@ console.log("Average:", avg);
   );
 };
 
-export default MCQAssessment;
+export default MCQAssessment2;

@@ -20,9 +20,9 @@ import UserDetails from './pages/UserDetails'
 import MCQAssessment from './components/MCQAssessment.jsx'
 import MainLayout from './components/MainLayout.jsx'
 import EnglishLearningHomepage from './pages/EnglishLearningHomepage.jsx'
+import MCQAssessment2 from './components/level1.jsx'
+import MCQAssessment3 from './components/level2.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
-import PronunciationComparison from './pages/PhonemeComparison.jsx' 
-import PronounceStartup from './pages/PronouncePageStartup.jsx' // Assuming this is the correct import for PronunciationComparison
 import EnglishPricePlan from './pages/EnglishPricePlan.jsx'
 import EnglishLearningAboutPage from './pages/EnglishLearningAboutPage.jsx'
 
@@ -43,6 +43,8 @@ function AppRoutes() {
       <Routes>
 
 
+        <Route path="/ff" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} />
+        {/* <Route path="/login" element={user ? <Navigate to="/DashboardOne" /> : <LoginForm />} /> */}
 
         <Route path="/user-details" element={<UserDetails />} />     
 
@@ -82,14 +84,17 @@ function AppRoutes() {
             < MainLayout />
           </ProtectedRoute>
         } />
-        <Route path="/paragraph" element={
+    <Route path="/mcq2" element={
           <ProtectedRoute>
-            <Paragraph />
+            <MCQAssessment2 />
           </ProtectedRoute>
         } />
-
-
-
+  <Route path="/mcq3" element={
+          <ProtectedRoute>
+            <MCQAssessment3 />
+          </ProtectedRoute>
+        } />
+      
 
 
 
@@ -170,31 +175,10 @@ function AppRoutes() {
             <VocabularyAnalyzer />
           </ProtectedRoute>
         } />
-
-
-
-
-
-  {/* Asanka's Routes Below */}
-
-        <Route path="/pronounce-coach" element={
-            // <ProtectedRoute>
-              <PronunciationComparison />
-            // </ProtectedRoute>
-        } />
-
-        <Route path="/pronounce-startup" element={
-            // <ProtectedRoute>
-              <PronounceStartup />
-            // </ProtectedRoute>
-        } />
-
-
-
-
-
       </Routes>
       <VocabularyBot />
+
+      
     </Router>
   );
 }

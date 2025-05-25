@@ -6,7 +6,7 @@ const EmotionCapture = ({ onCapture, interval = 5000 }) => {
   const [debugInfo, setDebugInfo] = useState('');
   const videoRef = useRef(null);
 
-  // Initialize webcam
+  // Initialize wssssebcam
   useEffect(() => {
     let isMounted = true;
     setDebugInfo('Initializing webcam...');
