@@ -35,17 +35,17 @@ jobs:
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/vocabpredictservice:latest
 
-      # Uncomment and configure the following if deploying to AWS ECS:
-      # - name: Configure AWS Credentials
-      #   uses: aws-actions/configure-aws-credentials@v2
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: eu-north-1
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
-      # - name: Deploy to ECS
-      #   run: |
-      #     aws ecs update-service \
-      #       --cluster my-cluster \
-      #       --service service1 \
-      #       --force-new-deployment
+      - name: Force new deployment of ECS service
+        run: |
+          aws ecs update-service \
+            --cluster research-project-deploy \
+            --service vocabpredictservicetaskone-service-6lbjt629 \
+            --force-new-deployment

@@ -42,7 +42,7 @@ function AppRoutes() {
         <Route path="/login" element={user ? <Navigate to="/DashboardOne" /> : <LoginForm />} />
         <Route path="/user-details" element={<UserDetails />} />     
         
-        <Route path="/login" element={user ? <Navigate to="/homepage" /> : <LoginForm />} />
+        <Route path="/login" element={user ? <Navigate to="/" /> : <LoginForm />} />
   
       
       {/* Home Page */}
