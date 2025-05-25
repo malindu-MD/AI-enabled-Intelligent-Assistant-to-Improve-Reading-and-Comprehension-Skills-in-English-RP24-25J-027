@@ -18,7 +18,6 @@ COPY . .
 
 # Expose the port FastAPI will run on
 EXPOSE 80
-python -m uvicorn main:app --reload
 
 # Run the FastAPI app with Uvicorn (use api.py as the entry point)
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
