@@ -1,4 +1,4 @@
-// File: App.jsx
+
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 import TabooVocabularyGame from './pages/TabooVocabularyGame'
@@ -16,29 +16,11 @@ import Paragraph from  './pages/Paragraph.jsx'
 import VocabularyAnalyzer from './pages/VocabularyAnalyzer'
 import { Toaster } from 'react-hot-toast';
 import { UserProvider, useUser } from './components/UserContext.jsx'
-import UserDetails from './pages/UserDetails'
-import MCQAssessment from './components/MCQAssessment.jsx'
 import MainLayout from './components/MainLayout.jsx'
 import EnglishLearningHomepage from './pages/EnglishLearningHomepage.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 import EnglishPricePlan from './pages/EnglishPricePlan.jsx'
 import EnglishLearningAboutPage from './pages/EnglishLearningAboutPage.jsx'
-
-=======
-import PronunciationComparison from './pages/PhonemeComparison.jsx' 
-import PronounceStartup from './pages/PronouncePageStartup.jsx' // Assuming this is the correct import for PronunciationComparison
->>>>>>> parent of 4228dae (Merge branch 'main' into AS-01)
-=======
-import PronunciationComparison from './pages/PhonemeComparison.jsx' 
-import PronounceStartup from './pages/PronouncePageStartup.jsx' // Assuming this is the correct import for PronunciationComparison
->>>>>>> parent of 4228dae (Merge branch 'main' into AS-01)
-=======
-import PronunciationComparison from './pages/PhonemeComparison.jsx' 
-import PronounceStartup from './pages/PronouncePageStartup.jsx' // Assuming this is the correct import for PronunciationComparison
->>>>>>> parent of 4228dae (Merge branch 'main' into AS-01)
 
 function AppRoutes() {
   const { user } = useUser();
@@ -54,10 +36,7 @@ function AppRoutes() {
       <ScrollToTop/>
       <Toaster position="top-right" reverseOrder={false} /> {/* Add Toaster Here */}
       <Routes>
-
-        {/* <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} /> */}
-        <Route path="/login" element={user ? <Navigate to="/DashboardOne" /> : <LoginForm />} />
-        <Route path="/user-details" element={<UserDetails />} />     
+       
         
         <Route path="/login" element={user ? <Navigate to="/" /> : <LoginForm />} />
   
@@ -69,6 +48,22 @@ function AppRoutes() {
             < EnglishLearningHomepage />
          
         } />
+        \
+        
+        <Route path="/EnglishPricePlan" element={
+          
+            < EnglishPricePlan />
+         
+        } />
+
+         <Route path="/EnglishLearningAboutPage" element={
+          
+            < EnglishLearningAboutPage />
+         
+        } />
+
+
+
 
 
       {/* sample page that you can use for add page */}
@@ -78,15 +73,10 @@ function AppRoutes() {
             < MainLayout />
           </ProtectedRoute>
         } />
-        <Route path="/paragraph" element={
-          <ProtectedRoute>
-            <Paragraph />
-          </ProtectedRoute>
-        } />
 
 
 
-
+       
 
 
       {/* bavantha  route Below */}
@@ -145,12 +135,6 @@ function AppRoutes() {
             <TabooVocabularyGame />
           </ProtectedRoute>
         } />
-        <Route path="/mcq" element={
-          <ProtectedRoute>
-            <MCQAssessment />
-          </ProtectedRoute>
-        } />
-
         <Route path="/vocabulary-game-quiz" element={
           <ProtectedRoute>
             <VocabularyQuizGame />
@@ -182,4 +166,4 @@ function App() {
   );
 }
 
-export default App
+export default App
