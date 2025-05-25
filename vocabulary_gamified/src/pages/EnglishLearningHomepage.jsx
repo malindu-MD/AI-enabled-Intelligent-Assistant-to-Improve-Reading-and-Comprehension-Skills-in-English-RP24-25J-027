@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight, User, LogOut, Settings, ChevronDown } from 'lucide-react';
 import firebase from 'firebase/compat/app';
+import HomePageHeader from '../components/HomePageHeader';
 import 'firebase/compat/auth';
 import { useUser } from '../components/UserContext';
-import HomePageHeader from '../components/HomePageHeader';
-
 const EnglishLearningHomepage = () => {
   const [showTour, setShowTour] = useState(false);
   const [tourStep, setTourStep] = useState(0);
@@ -30,7 +29,6 @@ const EnglishLearningHomepage = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
 
   useEffect(() => {
     // Check if user is new (simulate with setTimeout for demo)
@@ -158,93 +156,7 @@ const EnglishLearningHomepage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Navigation */}
-      {/* <nav className="bg-white shadow-lg sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <BookOpen className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-xl font-bold text-blue-600">Readify</span>
-            </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                <a href="#" className="text-blue-600 hover:text-blue-800 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Courses</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Progress</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Community</a>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              {user ? (
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                    className="flex items-center space-x-3 bg-gray-50 hover:bg-gray-100 rounded-full px-3 py-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium">
-                      {getInitials(user.name)}
-                    </div>
-                    <span className="hidden sm:block text-gray-700 font-medium">{user.name}</span>
-                    <ChevronDown 
-                      size={16} 
-                      className={`text-gray-500 transition-transform duration-200 ${
-                        showProfileDropdown ? 'rotate-180' : ''
-                      }`} 
-                    />
-                  </button>
-
-                  {/* Profile Dropdown */}
-                  {showProfileDropdown && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                      <div className="px-4 py-3 border-b border-gray-100">
-                        <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                        <p className="text-sm text-gray-500">{user.email}</p>
-                      </div>
-                      
-                      <button
-                        onClick={handleProfile}
-                        className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
-                      >
-                        <User size={16} className="mr-3 text-gray-400" />
-                        View Profile
-                      </button>
-                      
-                      <button
-                        onClick={handleSettings}
-                        className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
-                      >
-                        <Settings size={16} className="mr-3 text-gray-400" />
-                        Settings
-                      </button>
-                      
-                      <div className="border-t border-gray-100 mt-2 pt-2">
-                        <button
-                          onClick={handleLogout}
-                          className="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
-                        >
-                          <LogOut size={16} className="mr-3 text-red-500" />
-                          Logout
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <button 
-                  onClick={handleLogin}
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full text-sm font-medium transition-colors duration-200 shadow-sm hover:shadow-md"
-                >
-                  Login
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav> */}
-
- <HomePageHeader/>
-
-     
-
+      <HomePageHeader/>
       {/* Hero Section */}
       <section id="hero" className={`relative py-20 px-4 sm:px-6 lg:px-8 ${showTour && tourSteps[tourStep].target === 'hero' ? 'ring-4 ring-blue-400' : ''}`}>
         <div className="max-w-7xl mx-auto text-center">
@@ -307,10 +219,7 @@ const EnglishLearningHomepage = () => {
                   <span>Real-world usage examples</span>
                 </div>
               </div>
-              <button
-              onClick={() => navigate('/DashboardOne')}
-              className="flex items-center text-blue-600 hover:text-blue-800 font-semibold"
-              >    
+              <button className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
                 Explore Vocabulary <ChevronRight size={16} className="ml-1" />
               </button>
             </div>
@@ -321,24 +230,22 @@ const EnglishLearningHomepage = () => {
                 <div className="bg-green-100 p-3 rounded-full">
                   <Target className="h-8 w-8 text-green-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 ml-4">Grammar Mastery</h3>
+                <h3 className="text-2xl font-bold text-gray-900 ml-4">Comprehension Practice</h3>
               </div>
               <p className="text-gray-600 mb-6">
-                Master English grammar with our step-by-step approach. From basics to advanced concepts, 
-                with plenty of practice exercises and instant feedback.
-              </p>
+              Develop fundamental reading skills with leveled passages, comprehension questions, and vocabulary in context.    </p>
               <div className="space-y-3 mb-6">
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Complete grammar curriculum</span>
+                  <span>Personalize Content</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Interactive exercises & quizzes</span>
+                  <span>Literacy Development</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Instant error correction</span>
+                  <span>Comprehension Skills</span>
                 </div>
               </div>
               <button 
@@ -353,7 +260,7 @@ const EnglishLearningHomepage = () => {
                 }} 
                 className="flex items-center text-blue-600 hover:text-blue-800 font-semibold"
               >
-                Practice Grammar <ChevronRight size={16} className="ml-1" />
+                Practice Quiz <ChevronRight size={16} className="ml-1" />
               </button>
             </div>
 
