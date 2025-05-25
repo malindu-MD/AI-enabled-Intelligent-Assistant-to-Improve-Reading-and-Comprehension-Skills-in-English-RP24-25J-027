@@ -32,7 +32,7 @@ const Header = ({ student, setShowPreferences, setShowAddWord, handleSignOut }) 
               student.level === 'Proficient' ? '🌟' : '👤'
             }</span>
           </div>
-          <div className="flex ml-6 space-x-2">
+          {/* <div className="flex ml-6 space-x-2">
             <button onClick={exitGame2} className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md">
               <span className="mr-2">📝</span><span>Paragraph</span>
             </button>
@@ -42,7 +42,7 @@ const Header = ({ student, setShowPreferences, setShowAddWord, handleSignOut }) 
             <button onClick={() => {}} className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md">
               <span className="mr-2">🗣️</span><span>Pronunciation</span>
             </button>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex items-center space-x-4">

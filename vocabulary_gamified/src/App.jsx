@@ -20,6 +20,7 @@ import UserDetails from './pages/UserDetails'
 import MCQAssessment from './components/MCQAssessment.jsx'
 import MainLayout from './components/MainLayout.jsx'
 import EnglishLearningHomepage from './pages/EnglishLearningHomepage.jsx'
+import ScrollToTop from './components/ScrollToTop.jsx'
 
 
 function AppRoutes() {
@@ -33,7 +34,7 @@ function AppRoutes() {
 
   return (
     <Router>
-
+      <ScrollToTop/>
       <Toaster position="top-right" reverseOrder={false} /> {/* Add Toaster Here */}
       <Routes>
 
