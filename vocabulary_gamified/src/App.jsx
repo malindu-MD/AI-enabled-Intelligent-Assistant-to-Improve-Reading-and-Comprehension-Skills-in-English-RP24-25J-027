@@ -25,7 +25,8 @@ import MCQAssessment3 from './components/level2.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import EnglishPricePlan from './pages/EnglishPricePlan.jsx'
 import EnglishLearningAboutPage from './pages/EnglishLearningAboutPage.jsx'
-
+import PronunciationComparison from './pages/PhonemeComparison.jsx' 
+import PronounceStartup from './pages/PronouncePageStartup.jsx'
 
 function AppRoutes() {
   const { user } = useUser();
@@ -175,6 +176,23 @@ function AppRoutes() {
             <VocabularyAnalyzer />
           </ProtectedRoute>
         } />
+
+
+        {/* Asanka's Routes Below */}
+
+        <Route path="/pronounce-coach" element={
+            // <ProtectedRoute>
+              <PronunciationComparison />
+            // </ProtectedRoute>
+        } />
+
+        <Route path="/pronounce-startup" element={
+            // <ProtectedRoute>
+              <PronounceStartup />
+            // </ProtectedRoute>
+        } />
+
+
       </Routes>
       <VocabularyBot />
 
