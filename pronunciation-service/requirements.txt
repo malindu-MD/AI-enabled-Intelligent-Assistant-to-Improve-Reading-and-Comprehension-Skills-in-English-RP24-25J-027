@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+numpy
+fastdtw
+librosa
+fuzzywuzzy
+python-Levenshtein
+azure-cognitiveservices-speech
+g2p-en
+panphon
+nltk

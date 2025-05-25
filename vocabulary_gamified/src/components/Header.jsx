@@ -76,8 +76,3 @@ const Header = ({ student, setShowPreferences, setShowAddWord, handleSignOut }) 
 };
 
 export default Header;
-
-
-
-
- 

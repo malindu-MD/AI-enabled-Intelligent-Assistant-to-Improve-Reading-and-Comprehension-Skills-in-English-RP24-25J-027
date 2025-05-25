@@ -16,11 +16,16 @@ import Paragraph from  './pages/Paragraph.jsx'
 import VocabularyAnalyzer from './pages/VocabularyAnalyzer'
 import { Toaster } from 'react-hot-toast';
 import { UserProvider, useUser } from './components/UserContext.jsx'
+import UserDetails from './pages/UserDetails'
+import MCQAssessment from './components/MCQAssessment.jsx'
 import MainLayout from './components/MainLayout.jsx'
 import EnglishLearningHomepage from './pages/EnglishLearningHomepage.jsx'
+import MCQAssessment2 from './components/level1.jsx'
+import MCQAssessment3 from './components/level2.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import EnglishPricePlan from './pages/EnglishPricePlan.jsx'
 import EnglishLearningAboutPage from './pages/EnglishLearningAboutPage.jsx'
+
 
 function AppRoutes() {
   const { user } = useUser();
@@ -36,7 +41,13 @@ function AppRoutes() {
       <ScrollToTop/>
       <Toaster position="top-right" reverseOrder={false} /> {/* Add Toaster Here */}
       <Routes>
-       
+
+
+        <Route path="/ff" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} />
+        {/* <Route path="/login" element={user ? <Navigate to="/DashboardOne" /> : <LoginForm />} /> */}
+
+        <Route path="/user-details" element={<UserDetails />} />     
+
         
         <Route path="/login" element={user ? <Navigate to="/" /> : <LoginForm />} />
   
@@ -73,9 +84,17 @@ function AppRoutes() {
             < MainLayout />
           </ProtectedRoute>
         } />
-
-
-
+    <Route path="/mcq2" element={
+          <ProtectedRoute>
+            <MCQAssessment2 />
+          </ProtectedRoute>
+        } />
+  <Route path="/mcq3" element={
+          <ProtectedRoute>
+            <MCQAssessment3 />
+          </ProtectedRoute>
+        } />
+      
 
 
 
@@ -135,6 +154,12 @@ function AppRoutes() {
             <TabooVocabularyGame />
           </ProtectedRoute>
         } />
+        <Route path="/mcq" element={
+          <ProtectedRoute>
+            <MCQAssessment />
+          </ProtectedRoute>
+        } />
+
         <Route path="/vocabulary-game-quiz" element={
           <ProtectedRoute>
             <VocabularyQuizGame />
