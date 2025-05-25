@@ -151,7 +151,7 @@ function AppRoutes() {
           </ProtectedRoute>
         } />
       </Routes>
-     
+      <VocabularyBot />
 
       
     </Router>
