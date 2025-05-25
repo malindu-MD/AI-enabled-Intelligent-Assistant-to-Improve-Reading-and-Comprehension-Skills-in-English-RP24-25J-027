@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight } from 'lucide-react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 const EnglishLearningHomepage = () => {
   const [showTour, setShowTour] = useState(false);
   const [tourStep, setTourStep] = useState(0);
   const [isVisible, setIsVisible] = useState({});
+  const navigate = useNavigate();
+
+
 
   useEffect(() => {
     // Check if user is new (simulate with setTimeout for demo)
@@ -190,7 +196,10 @@ const EnglishLearningHomepage = () => {
                   <span>Real-world usage examples</span>
                 </div>
               </div>
-              <button className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
+              <button
+              onClick={() => navigate('/DashboardOne')}
+              className="flex items-center text-blue-600 hover:text-blue-800 font-semibold"
+              >    
                 Explore Vocabulary <ChevronRight size={16} className="ml-1" />
               </button>
             </div>

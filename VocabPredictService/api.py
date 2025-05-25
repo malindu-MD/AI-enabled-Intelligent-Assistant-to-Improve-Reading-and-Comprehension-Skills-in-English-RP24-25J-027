@@ -36,21 +36,24 @@ def predict(textlist: TextList):
     response = []
     for text, pred, proba in zip(textlist.texts, preds, probas):
         feedback_prompt = f"""
-        You are an English teacher. A student wrote the following sentence:
+        You are a supportive English teacher helping a student grow their language skills.
 
+        The student wrote the following sentence:
         "{text}"
 
-        Their vocabulary level is estimated as **{pred}** based on the CEFR scale.
-        Give a short paragraph (3–4 sentences) that:
-        1. Clearly explains what this CEFR level means in simple words,
-        2. Encourages the student by highlighting their strengths,
-        3. Suggests one or two ways to improve vocabulary or sentence quality.
+        Their current vocabulary level is estimated as **{pred}** on the CEFR scale.
 
-        Avoid technical terms. Make it easy to understand. Be positive and supportive.
+        Write a short, encouraging paragraph (3–4 sentences) that:
+        1. Explains what the {pred} level means in simple, friendly language.
+        2. Praises the student for what they did well.
+        3. Gives 2 specific tips to help them improve their vocabulary and move toward the next CEFR level.
+        4. Suggests one resource or habit (like reading, using flashcards, or watching shows) to help them learn new words.
+
+        Avoid technical terms. Be easy to understand, kind, and helpful.
         """
 
         feedback = modelLLM.generate_content(feedback_prompt).text.strip()
-
+        feedback=feedback + " you're ready to keep building your skills. To help you improve and move to the next stage, try out the vocabulary games available in this app according to your next level. "
         row = {
             "text": text,
             "level": pred,

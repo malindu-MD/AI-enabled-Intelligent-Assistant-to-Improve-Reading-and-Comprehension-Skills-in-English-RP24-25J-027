@@ -16,6 +16,7 @@ openai
 langchain-community
 langchain
 faiss-cpu
+pytest
 
 
 

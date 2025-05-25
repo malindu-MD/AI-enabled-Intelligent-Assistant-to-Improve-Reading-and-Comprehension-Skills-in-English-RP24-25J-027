@@ -18,6 +18,7 @@ import { Toaster } from 'react-hot-toast';
 import { UserProvider, useUser } from './components/UserContext.jsx'
 import MainLayout from './components/MainLayout.jsx'
 import EnglishLearningHomepage from './pages/EnglishLearningHomepage.jsx'
+import ScrollToTop from './components/ScrollToTop.jsx'
 
 function AppRoutes() {
   const { user } = useUser();
@@ -30,7 +31,7 @@ function AppRoutes() {
 
   return (
     <Router>
-
+      <ScrollToTop/>
       <Toaster position="top-right" reverseOrder={false} /> {/* Add Toaster Here */}
       <Routes>
         {/* <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} /> */}

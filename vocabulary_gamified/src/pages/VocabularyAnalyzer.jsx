@@ -225,7 +225,8 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
       
       // Update Firebase
       await firebase.database().ref(`users/${user.uid}`).update({
-        level: levelTitle
+        level: levelTitle,
+        vocabulary_feedback:analysis.feedback
       });
       
       // Update user context
@@ -269,7 +270,7 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
   // Analyze text using the API
   const analyzeText = async (text) => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/predict', {
+      const response = await fetch('https://100.27.12.205/predict', {
         method: 'POST',
         headers: {
           'accept': 'application/json',
@@ -311,6 +312,7 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
           dominantLevel: result.level,
           scores: result.scores,
           text: result.text,
+          feedback :result.feedback,
           score: score
         };
         
@@ -576,6 +578,24 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
                 </div>
                 
                 {/* Text Analysis */}
+                 <div className="bg-white border border-gray-200 rounded-lg p-3 mb-4">
+                  <h3 className="text-sm font-bold text-gray-800 mb-2 flex items-center">
+                    <FileText className="mr-1 text-blue-500" size={16} /> Feedback 💬
+                  </h3>
+                  <div 
+                    className="p-2 bg-gray-50 border border-gray-200 rounded-lg max-h-24 overflow-y-auto text-sm"
+                   
+                  >{analysis.feedback}</div>
+                  <div className="flex flex-wrap gap-1 mt-2 text-xs">
+                    <span className="px-2 py-0.5 bg-blue-100 rounded text-xs">A1: Basic</span>
+                    <span className="px-2 py-0.5 bg-green-100 rounded text-xs">A2: Elementary</span>
+                    <span className="px-2 py-0.5 bg-yellow-100 rounded text-xs">B1: Intermediate</span>
+                    <span className="px-2 py-0.5 bg-orange-100 rounded text-xs">B2: Upper Int.</span>
+                    <span className="px-2 py-0.5 bg-red-100 rounded text-xs">C1: Advanced</span>
+                    <span className="px-2 py-0.5 bg-purple-100 rounded text-xs">C2: Proficient</span>
+                  </div>
+                </div>
+                
                 <div className="bg-white border border-gray-200 rounded-lg p-3 mb-4">
                   <h3 className="text-sm font-bold text-gray-800 mb-2 flex items-center">
                     <FileText className="mr-1 text-blue-500" size={16} /> Your Analyzed Text
@@ -593,6 +613,7 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
                     <span className="px-2 py-0.5 bg-purple-100 rounded text-xs">C2: Proficient</span>
                   </div>
                 </div>
+
                 
                 {/* Actions */}
                 <div className="flex justify-between">
