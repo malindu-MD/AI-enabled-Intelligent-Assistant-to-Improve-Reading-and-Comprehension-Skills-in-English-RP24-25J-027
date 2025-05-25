@@ -22,7 +22,7 @@ const Header = ({ student, setShowPreferences, setShowAddWord, handleSignOut }) 
             student.level === 'Advanced' ? 'bg-red-600' :
             student.level === 'Proficient' ? 'bg-purple-600' : 'bg-gray-600'
           } ml-4 px-3 py-1 rounded-full flex items-center`}>
-            <span>Your Level: <strong>{student.level}</strong> </span>
+            <span>Your Vocabulary Level: <strong>{student.level}</strong> </span>
             <span className="mr-2">{
               student.level === 'Beginner' ? '🌱' :
               student.level === 'Elementary' ? '🌿' :
@@ -32,7 +32,7 @@ const Header = ({ student, setShowPreferences, setShowAddWord, handleSignOut }) 
               student.level === 'Proficient' ? '🌟' : '👤'
             }</span>
           </div>
-          <div className="flex ml-6 space-x-2">
+          {/* <div className="flex ml-6 space-x-2">
             <button onClick={exitGame2} className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md">
               <span className="mr-2">📝</span><span>Paragraph</span>
             </button>
@@ -42,10 +42,13 @@ const Header = ({ student, setShowPreferences, setShowAddWord, handleSignOut }) 
             <button onClick={() => {}} className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md">
               <span className="mr-2">🗣️</span><span>Pronunciation</span>
             </button>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex items-center space-x-4">
+            <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
+            <span className="mr-2">💭 Assessment Feedback</span>
+          </div>
           <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
             <span className="mr-2">⭐</span><span>{student.points} pts</span>
           </div>
@@ -71,3 +74,4 @@ const Header = ({ student, setShowPreferences, setShowAddWord, handleSignOut }) 
 };
 
 export default Header;
+

@@ -22,6 +22,10 @@ import MainLayout from './components/MainLayout.jsx'
 import EnglishLearningHomepage from './pages/EnglishLearningHomepage.jsx'
 import MCQAssessment2 from './components/level1.jsx'
 import MCQAssessment3 from './components/level2.jsx'
+import ScrollToTop from './components/ScrollToTop.jsx'
+import EnglishPricePlan from './pages/EnglishPricePlan.jsx'
+import EnglishLearningAboutPage from './pages/EnglishLearningAboutPage.jsx'
+
 
 function AppRoutes() {
   const { user } = useUser();
@@ -34,13 +38,16 @@ function AppRoutes() {
 
   return (
     <Router>
-
+      <ScrollToTop/>
       <Toaster position="top-right" reverseOrder={false} /> {/* Add Toaster Here */}
       <Routes>
 
+
         <Route path="/ff" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} />
         {/* <Route path="/login" element={user ? <Navigate to="/DashboardOne" /> : <LoginForm />} /> */}
+
         <Route path="/user-details" element={<UserDetails />} />     
+
         
         <Route path="/login" element={user ? <Navigate to="/" /> : <LoginForm />} />
   
@@ -52,6 +59,22 @@ function AppRoutes() {
             < EnglishLearningHomepage />
          
         } />
+        \
+        
+        <Route path="/EnglishPricePlan" element={
+          
+            < EnglishPricePlan />
+         
+        } />
+
+         <Route path="/EnglishLearningAboutPage" element={
+          
+            < EnglishLearningAboutPage />
+         
+        } />
+
+
+
 
 
       {/* sample page that you can use for add page */}
@@ -89,13 +112,13 @@ function AppRoutes() {
         
         
         
+         
         
         
+
+
+
         
-
-
-
-
         
         
         {/* Malindu Routes Below */}

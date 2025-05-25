@@ -3,6 +3,8 @@ import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { useUser } from '../components/UserContext';
+import HomePageHeader from '../components/HomePageHeader';
+
 const EnglishLearningHomepage = () => {
   const [showTour, setShowTour] = useState(false);
   const [tourStep, setTourStep] = useState(0);
@@ -28,6 +30,7 @@ const EnglishLearningHomepage = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
 
   useEffect(() => {
     // Check if user is new (simulate with setTimeout for demo)
@@ -155,7 +158,7 @@ const EnglishLearningHomepage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Navigation */}
-      <nav className="bg-white shadow-lg sticky top-0 z-40">
+      {/* <nav className="bg-white shadow-lg sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
@@ -236,7 +239,11 @@ const EnglishLearningHomepage = () => {
             </div>
           </div>
         </div>
-      </nav>
+      </nav> */}
+
+ <HomePageHeader/>
+
+     
 
       {/* Hero Section */}
       <section id="hero" className={`relative py-20 px-4 sm:px-6 lg:px-8 ${showTour && tourSteps[tourStep].target === 'hero' ? 'ring-4 ring-blue-400' : ''}`}>
@@ -300,7 +307,10 @@ const EnglishLearningHomepage = () => {
                   <span>Real-world usage examples</span>
                 </div>
               </div>
-              <button className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
+              <button
+              onClick={() => navigate('/DashboardOne')}
+              className="flex items-center text-blue-600 hover:text-blue-800 font-semibold"
+              >    
                 Explore Vocabulary <ChevronRight size={16} className="ml-1" />
               </button>
             </div>

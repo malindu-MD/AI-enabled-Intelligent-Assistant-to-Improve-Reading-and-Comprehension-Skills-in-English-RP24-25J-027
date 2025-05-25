@@ -236,7 +236,7 @@ const DashboardOne = () => {
         ) : !gameActive ? (
           <div>
             {/* Welcome section */}
-            <div className="bg-white rounded-lg p-6 shadow-md mb-6">
+            {/* <div className="bg-white rounded-lg p-6 shadow-md mb-6">
               <h2 className="text-xl font-bold text-indigo-800 mb-2">Hello, {user?.name}!</h2>
               <p className="text-gray-600">Continue building your vocabulary skills. You're on a {student.streak}-day streak!</p>
               <div className="mt-4 mb-4 bg-indigo-100 p-3 rounded-md">
@@ -250,9 +250,67 @@ const DashboardOne = () => {
                   setShowPreferences(false);
                 }}
               >
-                Test Your Level
+                Test Vocabulary Your Level
               </button>
-            </div>
+            </div> */}
+
+            {/* Welcome section */}
+<div className="bg-white rounded-xl p-6 shadow-xl mb-6 border-2 border-indigo-100 relative overflow-hidden hover:shadow-2xl transition-all duration-300">
+  {/* Gaming particles */}
+  <div className="absolute top-2 right-4 text-yellow-500 animate-bounce text-xl">⭐</div>
+  <div className="absolute bottom-3 left-6 text-orange-500 animate-pulse text-xl">🔥</div>
+  <div className="absolute top-6 left-20 text-blue-400 animate-ping">💎</div>
+  
+  <div className="flex items-center justify-between mb-3">
+    <h2 className="text-2xl font-bold text-indigo-800 mb-2 flex items-center gap-2">
+      <span className="animate-bounce text-2xl">🎮</span>
+      Hello, {user?.name}!
+    </h2>
+    <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg p-3 shadow-lg hover:scale-105 transition-transform duration-300">
+      <div className="text-center">
+        <div className="text-xl font-bold text-white">{student.streak}</div>
+        <div className="text-xs text-indigo-100 flex items-center justify-center gap-1">
+          <span className="animate-pulse">🔥</span>
+          Day Streak
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <p className="text-gray-700 mb-4">Continue building your vocabulary skills.<span className="font-bold text-indigo-600"></span></p>
+  
+  <div className="mt-4 mb-4 bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg border-2 border-indigo-200 hover:from-indigo-100 hover:to-purple-100 transition-all duration-300 hover:shadow-md cursor-pointer">
+    <h3 className="font-bold text-indigo-800 mb-2 flex items-center gap-2">
+      <span className="text-xl">🎯</span>
+      Today's Challenge:
+      <span className="bg-yellow-400 text-black text-xs px-3 py-1 rounded-full animate-pulse font-bold shadow-md">+100 XP</span>
+    </h3>
+    <p className="text-gray-700">Learn <span className="font-bold text-purple-600 bg-purple-100 px-2 py-1 rounded">{student.preferences.dailyGoal} new words</span> to earn bonus points</p>
+  </div>
+  
+  <button
+    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold px-6 py-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center justify-center gap-3 group relative overflow-hidden"
+    onClick={() => {
+      setShowAddWord(true);
+      setShowPreferences(false);
+    }}
+  >
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+    <span className="text-xl group-hover:rotate-12 transition-transform duration-300">📚</span>
+    <span className="text-lg">Test Vocabulary Your Level</span>
+    <span className="group-hover:translate-x-2 transition-transform duration-300 text-xl">🚀</span>
+  </button>
+  
+  {/* Progress indicator */}
+  <div className="mt-4 flex items-center justify-center gap-2 text-sm text-gray-500">
+    <div className="flex gap-1">
+      <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></div>
+      <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse delay-100"></div>
+      <div className="w-2 h-2 bg-pink-400 rounded-full animate-pulse delay-200"></div>
+    </div>
+    <span>Ready to level up?</span>
+  </div>
+</div>
 
             {/* Game modes section */}
             <div className="bg-white rounded-lg p-6 shadow-md mb-6">

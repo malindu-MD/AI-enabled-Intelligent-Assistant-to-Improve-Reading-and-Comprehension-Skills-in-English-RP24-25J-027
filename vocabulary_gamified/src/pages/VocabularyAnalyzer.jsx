@@ -4,13 +4,6 @@ import { useUser } from '../components/UserContext';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
 
-// Basic topics
-const topics = [
-  { id: 1, name: "Adventure & Travel", emoji: "🌍", description: "Explore exciting journeys!" },
-  { id: 2, name: "Science & Technology", emoji: "🔬", description: "Discover innovations!" },
-  { id: 3, name: "Daily Life", emoji: "🎨", description: "Everyday activities!" }
-];
-
 // Level info
 const levelInfo = {
    A1: { title: "Beginner", color: "bg-blue-500" },
@@ -117,21 +110,17 @@ const welcomeSlides = [
       <div>
         <div className="space-y-6">
           <div className="flex items-center justify-center">
-            <div className="bg-blue-100 rounded-full p-2 mr-4 w-10 h-10 flex items-center justify-center text-blue-600">1</div>
-            <div>
-              <p className="font-medium">Select a topic to write about</p>
-              <p className="text-sm text-gray-600">Choose from several interesting categories</p>
-            </div>
+           
           </div>
           <div className="flex items-center justify-center">
-            <div className="bg-blue-100 rounded-full p-2 mr-4 w-10 h-10 flex items-center justify-center text-blue-600">2</div>
+            <div className="bg-blue-100 rounded-full p-2 mr-4 w-10 h-10 flex items-center justify-center text-blue-600">1</div>
             <div>
               <p className="font-medium">Write your text</p>
               <p className="text-sm text-gray-600">Express yourself fully using your best vocabulary</p>
             </div>
           </div>
           <div className="flex items-center justify-center">
-            <div className="bg-blue-100 rounded-full p-2 mr-4 w-10 h-10 flex items-center justify-center text-blue-600">3</div>
+            <div className="bg-blue-100 rounded-full p-2 mr-4 w-10 h-10 flex items-center justify-center text-blue-600">2</div>
             <div>
               <p className="font-medium">Get your vocabulary analysis</p>
               <p className="text-sm text-gray-600">View your CEFR level and detailed breakdown</p>
@@ -145,12 +134,12 @@ const welcomeSlides = [
 
 const VocabularyAnalyzer = ({setShowAddWord}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentPhase, setCurrentPhase] = useState('intro'); // intro, topic, input, processing, results
+  const [currentPhase, setCurrentPhase] = useState('intro'); // intro, input, processing, results
   const [welcomeSlideIndex, setWelcomeSlideIndex] = useState(0);
-  const [selectedTopic, setSelectedTopic] = useState(null);
   const [userInput, setUserInput] = useState('');
   const [analysis, setAnalysis] = useState(null);
   const [error, setError] = useState(null);
+  const [validationErrors, setValidationErrors] = useState([]);
   const [isSavingLevel, setIsSavingLevel] = useState(false);
   const {user, setUser} = useUser();
   
@@ -174,7 +163,7 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
     if (welcomeSlideIndex < welcomeSlides.length - 1) {
       setWelcomeSlideIndex(prev => prev + 1);
     } else {
-      setCurrentPhase('topic');
+      setCurrentPhase('input');
     }
   };
   
@@ -184,28 +173,118 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
     }
   };
   
-  // Handle topic selection
-  const handleTopicSelect = (topicId) => {
-    setSelectedTopic(topics.find(t => t.id === topicId));
+  // Input validation function
+  const validateInput = (text) => {
+    const errors = [];
+    const trimmedText = text.trim();
+    
+    // Check minimum length
+    if (trimmedText.length < 50) {
+      errors.push("Text should be at least 50 characters long for accurate analysis.");
+    }
+    
+    // Check minimum word count
+    const words = trimmedText.match(/\b\w+\b/g) || [];
+    if (words.length < 10) {
+      errors.push("Please write at least 10 words for meaningful analysis.");
+    }
+    
+    // Check maximum length (to prevent API overload)
+    if (trimmedText.length > 5000) {
+      errors.push("Text is too long. Please keep it under 5000 characters.");
+    }
+    
+    // Check for excessive repetition
+    const wordCounts = {};
+    words.forEach(word => {
+      const lowerWord = word.toLowerCase();
+      wordCounts[lowerWord] = (wordCounts[lowerWord] || 0) + 1;
+    });
+    
+    const totalWords = words.length;
+    const repeatedWords = Object.entries(wordCounts)
+      .filter(([word, count]) => count > Math.max(3, totalWords * 0.1) && word.length > 3)
+      .map(([word]) => word);
+    
+    if (repeatedWords.length > 0) {
+      errors.push(`Avoid excessive repetition of words: ${repeatedWords.slice(0, 3).join(', ')}`);
+    }
+    
+    // Check for minimum sentence count
+    const sentences = trimmedText.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    if (sentences.length < 2) {
+      errors.push("Please write at least 2 complete sentences.");
+    }
+    
+    // Check for non-English characters (basic check)
+    const nonEnglishPattern = /[^\x00-\x7F\u00C0-\u017F\u0100-\u024F]/g;
+    if (nonEnglishPattern.test(trimmedText)) {
+      errors.push("Please write only in English using standard characters.");
+    }
+    
+    // Check for excessive punctuation or special characters
+    const specialCharCount = (trimmedText.match(/[^a-zA-Z0-9\s.,!?;:'"()-]/g) || []).length;
+    if (specialCharCount > trimmedText.length * 0.05) {
+      errors.push("Please use standard punctuation and avoid excessive special characters.");
+    }
+    
+    // Check for potential copy-paste indicators (very short sentences or very long single sentence)
+    const avgSentenceLength = totalWords / sentences.length;
+    if (avgSentenceLength < 3) {
+      errors.push("Please write more complete, detailed sentences.");
+    }
+    
+    // Check for single very long sentence (might indicate poor structure)
+    const longestSentence = Math.max(...sentences.map(s => (s.match(/\b\w+\b/g) || []).length));
+    if (longestSentence > totalWords * 0.8 && totalWords > 20) {
+      errors.push("Try to use a variety of sentence lengths for better analysis.");
+    }
+    
+    return errors;
+  };
+  
+  // Real-time validation as user types
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setUserInput(value);
+    
+    // Clear previous validation errors when user starts typing
+    if (validationErrors.length > 0) {
+      setValidationErrors([]);
+    }
+    
+    // Clear API errors when user starts typing
+    if (error) {
+      setError(null);
+    }
+  };
+  
+  // Go back to input
+  const goBackToInput = () => {
+    setUserInput('');
+    setValidationErrors([]);
     setCurrentPhase('input');
   };
   
-  // Go back to topic selection
-  const goBackToTopics = () => {
-    setSelectedTopic(null);
-    setUserInput('');
-    setCurrentPhase('topic');
-  };
-  
-  // Handle text submission
+  // Handle text submission with validation
   const handleSubmit = async () => {
-    if (!userInput.trim()) return;
+    const trimmedInput = userInput.trim();
+    if (!trimmedInput) return;
     
+    // Validate input
+    const errors = validateInput(trimmedInput);
+    if (errors.length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
+    
+    // Clear validation errors if validation passes
+    setValidationErrors([]);
     setCurrentPhase('processing');
     setError(null);
     
     try {
-      await analyzeText(userInput);
+      await analyzeText(trimmedInput);
       setCurrentPhase('results');
     } catch (err) {
       setError('An error occurred during analysis. Please try again.');
@@ -225,7 +304,8 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
       
       // Update Firebase
       await firebase.database().ref(`users/${user.uid}`).update({
-        level: levelTitle
+        level: levelTitle,
+        vocabulary_feedback:analysis.feedback
       });
       
       // Update user context
@@ -248,28 +328,25 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
   
   // Reset to start
   const restartAssessment = () => {
-    setSelectedTopic(null);
     setUserInput('');
+    setValidationErrors([]);
     setAnalysis(null);
     setCurrentPhase('intro');
     setWelcomeSlideIndex(0);
   };
   
-  // Try with another topic
-  const tryAnotherTopic = () => {
-    // Save level before trying another topic
-    
-    
-    setSelectedTopic(null);
+  // Try again
+  const tryAgain = () => {
     setUserInput('');
+    setValidationErrors([]);
     setAnalysis(null);
-    setCurrentPhase('topic');
+    setCurrentPhase('input');
   };
   
   // Analyze text using the API
   const analyzeText = async (text) => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/predict', {
+      const response = await fetch('http://3.234.245.203/predict', {
         method: 'POST',
         headers: {
           'accept': 'application/json',
@@ -311,6 +388,7 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
           dominantLevel: result.level,
           scores: result.scores,
           text: result.text,
+          feedback :result.feedback,
           score: score
         };
         
@@ -341,7 +419,18 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
     return userInput;
   };
   
-  // Chart data for visualization
+  // Get input statistics for display
+  const getInputStats = () => {
+    const trimmedText = userInput.trim();
+    const words = trimmedText.match(/\b\w+\b/g) || [];
+    const sentences = trimmedText.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    
+    return {
+      characters: trimmedText.length,
+      words: words.length,
+      sentences: sentences.length
+    };
+  };
   const getChartData = () => {
     if (!analysis) return [];
     
@@ -420,23 +509,58 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
               </div>
             )}
             
-            {/* Topic Selection */}
-            {currentPhase === 'topic' && (
+            {/* Input Screen */}
+            {currentPhase === 'input' && (
               <div>
-                <h2 className="text-xl font-bold text-gray-800 mb-6 text-center">Choose a Writing Topic</h2>
+                <h2 className="text-xl font-bold text-gray-800 mb-2 text-center">Write Your Text</h2>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-                  {topics.map(topic => (
-                    <button
-                      key={topic.id}
-                      onClick={() => handleTopicSelect(topic.id)}
-                      className="bg-white border border-gray-200 rounded-lg p-4 text-center hover:border-blue-500 hover:shadow-md transition duration-200 h-36 flex flex-col items-center justify-center"
-                    >
-                      <div className="text-4xl mb-3">{topic.emoji}</div>
-                      <h3 className="font-medium text-gray-800">{topic.name}</h3>
-                      <p className="text-gray-600 text-sm">{topic.description}</p>
-                    </button>
-                  ))}
+                {error && (
+                  <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg flex items-center">
+                    <AlertTriangle size={16} className="mr-2 flex-shrink-0" />
+                    <span>{error}</span>
+                  </div>
+                )}
+                
+                {validationErrors.length > 0 && (
+                  <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg">
+                    <div className="flex items-center mb-2">
+                      <AlertTriangle size={16} className="mr-2 flex-shrink-0" />
+                      <span className="font-medium">Please fix the following issues:</span>
+                    </div>
+                    <ul className="list-disc pl-6 space-y-1">
+                      {validationErrors.map((error, index) => (
+                        <li key={index} className="text-sm">{error}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                <div className="space-y-3 mb-6">
+                  <textarea
+                    value={userInput}
+                    onChange={handleInputChange}
+                    className={`w-full p-4 border rounded-lg transition-colors ${
+                      validationErrors.length > 0 
+                        ? 'border-red-300 focus:border-red-500' 
+                        : 'border-gray-300 focus:border-blue-500'
+                    }`}
+                    placeholder="Type your paragraph or essay here..."
+                    rows={8}
+                  />
+                  
+                  {/* Input Statistics */}
+                  {userInput.trim() && (
+                    <div className="flex justify-between text-xs text-gray-500 bg-gray-50 p-2 rounded">
+                      <span>Characters: {getInputStats().characters}/5000</span>
+                      <span>Words: {getInputStats().words}</span>
+                      <span>Sentences: {getInputStats().sentences}</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center text-sm text-yellow-700 bg-yellow-50 p-2 rounded">
+                    <AlertTriangle size={16} className="mr-1 flex-shrink-0" />
+                    <span>Remember to use a variety of sentence structures and vocabulary to get the most accurate assessment.</span>
+                  </div>
                 </div>
                 
                 <div className="flex justify-between">
@@ -448,48 +572,6 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
                     className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200 flex items-center"
                   >
                     <ArrowLeft size={16} className="mr-1" /> Back to Instructions
-                  </button>
-                </div>
-              </div>
-            )}
-            
-            {/* Input Screen */}
-            {currentPhase === 'input' && selectedTopic && (
-              <div>
-                <h2 className="text-xl font-bold text-gray-800 mb-2 text-center">Write Your Text</h2>
-                <div className="flex items-center justify-center mb-6">
-                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                    {selectedTopic.emoji} {selectedTopic.name}
-                  </span>
-                </div>
-                
-                {error && (
-                  <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg flex items-center">
-                    <AlertTriangle size={16} className="mr-2 flex-shrink-0" />
-                    <span>{error}</span>
-                  </div>
-                )}
-                
-                <div className="space-y-3 mb-6">
-                  <textarea
-                    value={userInput}
-                    onChange={(e) => setUserInput(e.target.value)}
-                    className="w-full p-4 border border-gray-300 rounded-lg"
-                    placeholder="Type your paragraph or essay here..."
-                    rows={8}
-                  />
-                  <div className="flex items-center text-sm text-yellow-700 bg-yellow-50 p-2 rounded">
-                    <AlertTriangle size={16} className="mr-1 flex-shrink-0" />
-                    <span>Remember to use a variety of sentence structures and vocabulary to get the most accurate assessment.</span>
-                  </div>
-                </div>
-                
-                <div className="flex justify-between">
-                  <button 
-                    onClick={goBackToTopics}
-                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition duration-200 flex items-center"
-                  >
-                    <ArrowLeft size={16} className="mr-1" /> Change Topic
                   </button>
                   <button 
                     onClick={handleSubmit}
@@ -576,6 +658,24 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
                 </div>
                 
                 {/* Text Analysis */}
+                 <div className="bg-white border border-gray-200 rounded-lg p-3 mb-4">
+                  <h3 className="text-sm font-bold text-gray-800 mb-2 flex items-center">
+                    <FileText className="mr-1 text-blue-500" size={16} /> Feedback 💬
+                  </h3>
+                  <div 
+                    className="p-2 bg-gray-50 border border-gray-200 rounded-lg max-h-24 overflow-y-auto text-sm"
+                   
+                  >{analysis.feedback}</div>
+                  <div className="flex flex-wrap gap-1 mt-2 text-xs">
+                    <span className="px-2 py-0.5 bg-blue-100 rounded text-xs">A1: Basic</span>
+                    <span className="px-2 py-0.5 bg-green-100 rounded text-xs">A2: Elementary</span>
+                    <span className="px-2 py-0.5 bg-yellow-100 rounded text-xs">B1: Intermediate</span>
+                    <span className="px-2 py-0.5 bg-orange-100 rounded text-xs">B2: Upper Int.</span>
+                    <span className="px-2 py-0.5 bg-red-100 rounded text-xs">C1: Advanced</span>
+                    <span className="px-2 py-0.5 bg-purple-100 rounded text-xs">C2: Proficient</span>
+                  </div>
+                </div>
+                
                 <div className="bg-white border border-gray-200 rounded-lg p-3 mb-4">
                   <h3 className="text-sm font-bold text-gray-800 mb-2 flex items-center">
                     <FileText className="mr-1 text-blue-500" size={16} /> Your Analyzed Text
@@ -593,6 +693,7 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
                     <span className="px-2 py-0.5 bg-purple-100 rounded text-xs">C2: Proficient</span>
                   </div>
                 </div>
+
                 
                 {/* Actions */}
                 <div className="flex justify-between">
@@ -603,10 +704,10 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
                     Start Over
                   </button>
                   <button 
-                    onClick={tryAnotherTopic}
+                    onClick={tryAgain}
                     className="px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 text-sm"
                   >
-                    Try Another Topic
+                    Try Again
                   </button>
                 </div>
               </div>

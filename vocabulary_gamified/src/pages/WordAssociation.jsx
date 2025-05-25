@@ -151,7 +151,7 @@ const WordAssociation = () => {
       setIsLoading(true);
       setError(null);
       
-      const response = await fetch('http://127.0.0.1:8000/api/v1/relatedmcq/', {
+      const response = await fetch('http://3.94.116.112/api/v1/relatedmcq/', {
         method: 'POST',
         headers: {
           'accept': 'application/json',
