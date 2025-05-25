@@ -83,7 +83,7 @@ def preprocess_text(text):
 
 
 def _simplify_punctuation(text):
-    # from https://github.com/shivam5992/textstat/issues/77
+   
 
     text = re.sub(r"[,:;()\-]", " ", text)  # Override commas, colons, etc to spaces/
     text = re.sub(r"[\.!?]", ".", text)  # Change all terminators like ! and ? to "."

@@ -5,7 +5,7 @@ on:
     paths:
       - 'VocabPredictService/**'
       - '.github/workflows/deploy-vocabP-service.yml'
-    branches: [dev]
+    branches: [main]
 
 jobs:
   deploy:

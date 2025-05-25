@@ -5,7 +5,7 @@ on:
     paths:
       - 'rag-vocabulary-system/**'
       - '.github/workflows/deploy-vocabulary-service.yml'
-    branches: [dev]
+    branches: [main]
 
 jobs:
   deploy:

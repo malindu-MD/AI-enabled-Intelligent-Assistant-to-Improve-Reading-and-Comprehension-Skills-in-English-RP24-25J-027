@@ -346,7 +346,7 @@ const VocabularyAnalyzer = ({setShowAddWord}) => {
   // Analyze text using the API
   const analyzeText = async (text) => {
     try {
-      const response = await fetch('http://3.234.245.203/predict', {
+      const response = await fetch('http://127.0.0.1:8000/predict', {
         method: 'POST',
         headers: {
           'accept': 'application/json',
