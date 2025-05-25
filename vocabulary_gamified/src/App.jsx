@@ -40,9 +40,10 @@ function AppRoutes() {
       <Toaster position="top-right" reverseOrder={false} /> {/* Add Toaster Here */}
       <Routes>
 
-        <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} />
-        <Route path="/login" element={user ? <Navigate to="/DashboardOne" /> : <LoginForm />} />
+
+
         <Route path="/user-details" element={<UserDetails />} />     
+
         
         <Route path="/login" element={user ? <Navigate to="/" /> : <LoginForm />} />
   
