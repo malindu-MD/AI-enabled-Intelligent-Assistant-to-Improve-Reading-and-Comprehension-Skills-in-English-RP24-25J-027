@@ -3,6 +3,7 @@ import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import HomePageHeader from '../components/HomePageHeader';
+// import HomePageHeader from '../components/HomePageHeader';
 
 
 const EnglishLearningHomepage = () => {
@@ -135,7 +136,9 @@ const EnglishLearningHomepage = () => {
         </div>
       </nav> */}
 
-      <HomePageHeader/>
+ <HomePageHeader/>
+
+     
 
       {/* Hero Section */}
       <section id="hero" className={`relative py-20 px-4 sm:px-6 lg:px-8 ${showTour && tourSteps[tourStep].target === 'hero' ? 'ring-4 ring-blue-400' : ''}`}>

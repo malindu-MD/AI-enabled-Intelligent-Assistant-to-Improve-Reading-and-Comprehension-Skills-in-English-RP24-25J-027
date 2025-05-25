@@ -1,37 +1,37 @@
-name: Deploy React App to Netlify
+# name: Deploy React App to Netlify
 
-on:
-  push:
-    branches:
-      - new_vocab
+# on:
+#   push:
+#     branches:
+#       - new_vocab
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: vocabulary_gamified   # <--- Set this to your frontend folder
+#     defaults:
+#       run:
+#         working-directory: vocabulary_gamified   # <--- Set this to your frontend folder
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+#       - name: Use Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 18
 
-      - name: Install dependencies
-        run: npm ci
+#       - name: Install dependencies
+#         run: npm ci
 
-      - name: Build project
-        run: npm run build
+#       - name: Build project
+#         run: npm run build
 
-      - name: Deploy to Netlify
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --dir=dist --prod --site=$NETLIFY_SITE_ID
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+#       - name: Deploy to Netlify
+#         uses: netlify/actions/cli@master
+#         with:
+#           args: deploy --dir=dist --prod --site=$NETLIFY_SITE_ID
+#         env:
+#           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+#           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
