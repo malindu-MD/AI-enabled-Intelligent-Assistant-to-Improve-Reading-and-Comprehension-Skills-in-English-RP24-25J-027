@@ -223,7 +223,10 @@ const EnglishLearningHomepage = () => {
                   <span>7000+ CEFR-aligned words across diverse topics</span>
                 </div>
               </div>
-              <button className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
+              <button
+               onClick={() => navigate('/DashboardOne')}
+              className="flex items-center text-blue-600 hover:text-blue-800 font-semibold"
+              >    
                 Explore Vocabulary <ChevronRight size={16} className="ml-1" />
               </button>
             </div>
