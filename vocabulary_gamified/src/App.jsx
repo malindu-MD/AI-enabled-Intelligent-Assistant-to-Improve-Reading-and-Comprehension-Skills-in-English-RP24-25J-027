@@ -21,7 +21,8 @@ import MCQAssessment from './components/MCQAssessment.jsx'
 import MainLayout from './components/MainLayout.jsx'
 import EnglishLearningHomepage from './pages/EnglishLearningHomepage.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
-
+import PronunciationComparison from './pages/PhonemeComparison.jsx' 
+import PronounceStartup from './pages/PronouncePageStartup.jsx' // Assuming this is the correct import for PronunciationComparison
 
 function AppRoutes() {
   const { user } = useUser();
@@ -38,7 +39,7 @@ function AppRoutes() {
       <Toaster position="top-right" reverseOrder={false} /> {/* Add Toaster Here */}
       <Routes>
 
-        <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} />
+        {/* <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} /> */}
         <Route path="/login" element={user ? <Navigate to="/DashboardOne" /> : <LoginForm />} />
         <Route path="/user-details" element={<UserDetails />} />     
         
@@ -149,10 +150,31 @@ function AppRoutes() {
             <VocabularyAnalyzer />
           </ProtectedRoute>
         } />
+
+
+
+
+
+  {/* Asanka's Routes Below */}
+
+        <Route path="/pronounce-coach" element={
+            // <ProtectedRoute>
+              <PronunciationComparison />
+            // </ProtectedRoute>
+        } />
+
+        <Route path="/pronounce-startup" element={
+            // <ProtectedRoute>
+              <PronounceStartup />
+            // </ProtectedRoute>
+        } />
+
+
+
+
+
       </Routes>
       <VocabularyBot />
-
-      
     </Router>
   );
 }
