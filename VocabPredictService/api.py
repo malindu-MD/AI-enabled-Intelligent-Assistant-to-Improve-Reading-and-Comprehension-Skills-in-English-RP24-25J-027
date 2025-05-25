@@ -29,6 +29,11 @@ model = Model("cefr_predictor/models/xgboost.joblib")
 class TextList(BaseModel):
     texts: List[str] = []
 
+@app.get("/malindu")
+def read_root():
+    return {"message": "Hello World "}
+
+
 @app.post("/predict")
 def predict(textlist: TextList):
     preds, probas = model.predict_decode(textlist.texts)
