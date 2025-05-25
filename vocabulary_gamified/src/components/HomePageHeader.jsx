@@ -2,13 +2,14 @@ import React, {useEffect, useState,useRef } from 'react';
 import { useUser } from './UserContext';
 import firebase from 'firebase/compat/app';
 import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight, User, LogOut, Settings, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link ,useNavigate} from 'react-router-dom';
 
 
 import 'firebase/compat/auth';
 
 
 const HomePageHeader = () => {
+  const navigate = useNavigate();
   const { user, setUser } = useUser();
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const dropdownRef = useRef(null);
@@ -43,7 +44,7 @@ const HomePageHeader = () => {
   };
 
   const handleLogin = () => {
-   <Link to="/login" />
+  navigate('/login'); // Navigate to the login page
   };
 
   const getInitials = (name) => {

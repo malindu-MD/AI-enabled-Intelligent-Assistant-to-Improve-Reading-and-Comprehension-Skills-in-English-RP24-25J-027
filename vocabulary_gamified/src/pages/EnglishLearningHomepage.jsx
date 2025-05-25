@@ -3,9 +3,10 @@ import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight
 import firebase from 'firebase/compat/app';
 import HomePageHeader from '../components/HomePageHeader';
 import 'firebase/compat/auth';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { useUser } from '../components/UserContext';
 const EnglishLearningHomepage = () => {
+  const navigate = useNavigate();
   const [showTour, setShowTour] = useState(false);
   const [tourStep, setTourStep] = useState(0);
   const [isVisible, setIsVisible] = useState({});
@@ -19,6 +20,7 @@ const EnglishLearningHomepage = () => {
 
   // Close dropdown when clicking outside
   useEffect(() => {
+    
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowProfileDropdown(false);
@@ -254,9 +256,9 @@ const EnglishLearningHomepage = () => {
                   console.log('Grammar button clicked', user);
                   console.log('user', user);
                   if (user?.isNew) {
-                    <Link to="/user" />
+                    navigate('/user-details')
                   } else {
-                    <Link to= "/paragraph"/>
+                   navigate('/paragraph')
                   }
                 }} 
                 className="flex items-center text-blue-600 hover:text-blue-800 font-semibold"
