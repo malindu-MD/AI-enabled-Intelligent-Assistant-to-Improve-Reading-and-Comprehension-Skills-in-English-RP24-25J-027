@@ -1,5 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Play, Volume2, Award, TrendingUp, Lightbulb, CheckCircle, XCircle, Target, Star, Clock, RotateCcw } from 'lucide-react';
+import HeaderSample from '../components/HeaderSample';
+import Footer from '../components/Footer';
+import toast from 'react-hot-toast';
 
 const PronunciationCoach = () => {
   const [currentLevel, setCurrentLevel] = useState('beginner');
@@ -14,6 +17,8 @@ const PronunciationCoach = () => {
   const [incorrectWords, setIncorrectWords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showGuidelines, setShowGuidelines] = useState(false);
+  const [generatedSimilarWords, setGeneratedSimilarWords] = useState({});
+  const [isLoadingSimilarWords, setIsLoadingSimilarWords] = useState(false);
   
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
@@ -42,6 +47,7 @@ const PronunciationCoach = () => {
     setCurrentWord(words[randomIndex]);
     setResult(null);
     setAudioBlob(null);
+    setGeneratedSimilarWords({}); // Clear previous generated words
   };
 
   const startCountdown = async () => {
@@ -142,7 +148,8 @@ const PronunciationCoach = () => {
       }
     } catch (error) {
       console.error('Error checking pronunciation:', error);
-      alert('Error connecting to server. Please check if the server is running on http://127.0.0.1:8000');
+      toast.error('Sorry. Something went wrong. Please try again.');
+      // window.location.reload();
     } finally {
       setIsLoading(false);
     }
@@ -183,6 +190,7 @@ const PronunciationCoach = () => {
       }
     };
     
+    
     writeString(0, 'RIFF');
     view.setUint32(4, 36 + length * 2, true);
     writeString(8, 'WAVE');
@@ -208,6 +216,12 @@ const PronunciationCoach = () => {
     return arrayBuffer;
   };
 
+  useEffect(() => {
+    if (result?.transcribed_word) {
+      console.log('Transcribed Word:', result.transcribed_word);
+    }
+  }, [result]);
+
   const speakWord = (word = currentWord) => {
     const utterance = new SpeechSynthesisUtterance(word);
     utterance.rate = 0.8;
@@ -220,23 +234,106 @@ const PronunciationCoach = () => {
     return <div dangerouslySetInnerHTML={{ __html: highlightedWord }} />;
   };
 
+  const GEMINI_API_KEY = 'AIzaSyCpqi3jk1QGIW75ku9xbPRpc4yCJD6Ztag';
+  const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+  // New function to generate similar words using Gemini
+  const generateSimilarWordsWithGemini = async (phonemes) => {
+    setIsLoadingSimilarWords(true);
+    try {
+      const phonemeList = phonemes.join(', ');
+      const prompt = `Generate 5 simple English words for each of these phonemes/sounds: ${phonemeList}. 
+      
+      For each phoneme, provide exactly 5 common English words that contain that specific sound. 
+      Format your response as a JSON object where each phoneme is a key and the value is an array of 5 words.
+      
+      Example format:
+      {
+        "AH": ["about", "cup", "love", "come", "done"],
+        "P": ["pat", "pop", "paper", "apple", "happy"]
+      }
+      
+      Only return the JSON object, no additional text.`;
+
+      const requestBody = {
+        contents: [{
+          parts: [{ text: prompt }]
+        }]
+      };
+
+      const response = await fetch(GEMINI_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const generatedText = data.candidates[0].content.parts[0].text;
+      
+      // Try to parse the JSON response
+      try {
+        const cleanedText = generatedText.replace(/```json\n?|\n?```/g, '').trim();
+        const parsedWords = JSON.parse(cleanedText);
+        setGeneratedSimilarWords(parsedWords);
+      } catch (parseError) {
+        console.error('Error parsing Gemini response:', parseError);
+        // Fallback to default similar words
+        const fallbackWords = {};
+        phonemes.forEach(phoneme => {
+          fallbackWords[phoneme] = similarWords[phoneme] || ['practice', 'more', 'words', 'with', 'sound'];
+        });
+        setGeneratedSimilarWords(fallbackWords);
+      }
+    } catch (error) {
+      console.error('Error generating similar words with Gemini:', error);
+      toast.error('Could not generate practice words. Using default words.');
+      
+      // Fallback to default similar words
+      const fallbackWords = {};
+      phonemes.forEach(phoneme => {
+        fallbackWords[phoneme] = similarWords[phoneme] || ['practice', 'more', 'words', 'with', 'sound'];
+      });
+      setGeneratedSimilarWords(fallbackWords);
+    } finally {
+      setIsLoadingSimilarWords(false);
+    }
+  };
+
+  // Modified function to handle showing similar words
+  const handleShowSimilarWords = async () => {
+    if (!showSimilarWords && result?.missed_phonemes) {
+      // If we're about to show similar words and don't have them generated yet
+      if (Object.keys(generatedSimilarWords).length === 0) {
+        await generateSimilarWordsWithGemini(result.missed_phonemes);
+      }
+    }
+    setShowSimilarWords(!showSimilarWords);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-8">
+      <HeaderSample/>
+      <div className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-900 py-8">
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center mb-4">
             <Volume2 className="w-12 h-12 mr-4 animate-pulse" />
-            <h1 className="text-4xl md:text-5xl font-bold">Pronunciation Coach</h1>
+            <h1 className="text-4xl sm:text-4xl font-bold">Pronunciation Coach</h1>
           </div>
-          <p className="text-xl opacity-90">Master your English pronunciation with personalized feedback</p>
+          <p className="text-s opacity-90">Master your English pronunciation with personalized feedback</p>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
         {/* Level Selection & Navigation */}
         <div className="flex flex-wrap justify-center gap-4 mb-8">
-          <div className="flex bg-white rounded-full p-1 shadow-lg">
+          {/* <div className="flex bg-white rounded-full p-1 shadow-lg">
             {Object.keys(wordLists).map((level) => (
               <button
                 key={level}
@@ -250,11 +347,11 @@ const PronunciationCoach = () => {
                 {level}
               </button>
             ))}
-          </div>
+          </div> */}
           
           <button
             onClick={() => setShowGuidelines(!showGuidelines)}
-            className="flex items-center gap-2 bg-yellow-500 text-white px-4 py-2 rounded-full hover:bg-yellow-600 transition-colors"
+            className="flex items-center gap-2 bg-green-800 text-white px-4 py-2 rounded-full hover:bg-green-600 transition-colors"
           >
             <Lightbulb className="w-4 h-4" />
             Tips & Guidelines
@@ -262,7 +359,7 @@ const PronunciationCoach = () => {
           
           <button
             onClick={() => setShowProgress(!showProgress)}
-            className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition-colors"
+            className="flex items-center gap-2 bg-yellow-800 text-white px-4 py-2 rounded-full hover:bg-yellow-600 transition-colors"
           >
             <TrendingUp className="w-4 h-4" />
             Progress ({correctWords.length}/{correctWords.length + incorrectWords.length})
@@ -271,13 +368,14 @@ const PronunciationCoach = () => {
 
         {/* Guidelines Panel */}
         {showGuidelines && (
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-6 rounded-lg animate-fadeIn">
-            <h3 className="text-lg font-semibold text-yellow-800 mb-3">Pronunciation Tips</h3>
-            <ul className="text-yellow-700 space-y-2">
-              <li>• Speak clearly and at a normal pace</li>
+          <div className="bg-yellow-40 border-l-4 border-yellow-400 p-6 mb-6 rounded-lg animate-fadeIn   ">
+            <h3 className="text-lg font-bold text-yellow-800 mb-4 px-16 text-center">Pronunciation Tips</h3>
+            <ul className="text-yellow-700 space-y-2  mx-auto max-w-xl pl-36  text-justify">
               <li>• Ensure you're in a quiet environment</li>
-              <li>• Listen to the word first, then try to mimic the pronunciation</li>
-              <li>• Focus on individual sounds (phonemes) if you make mistakes</li>
+              <li>• Speak clearly and at a normal pace</li>
+              
+              <li>• Try to mimic the pronunciation</li>
+              <li>• Focus on individual sounds (phonemes) </li>
               <li>• Practice regularly for better results</li>
             </ul>
           </div>
@@ -322,7 +420,9 @@ const PronunciationCoach = () => {
         {/* Main Practice Area */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-6">
           <div className="text-center mb-8">
-            <div className="inline-block bg-blue-100 rounded-2xl p-8 mb-4">
+          
+            <div className="inline-block bg-blue-100 rounded-2xl p-16 mb-4">
+
               <h2 className="text-5xl font-bold text-blue-800 mb-2">{currentWord}</h2>
               {/* <button
                 onClick={speakWord}
@@ -356,7 +456,7 @@ const PronunciationCoach = () => {
               <div className="flex items-center justify-center">
                 <div className="bg-red-500 text-white px-6 py-4 rounded-full animate-pulse">
                   <MicOff className="w-6 h-6 inline mr-2" />
-                  Recording... (4 seconds)
+                  Speak Now – You Have 4 Seconds
                 </div>
               </div>
             )}
@@ -392,25 +492,25 @@ const PronunciationCoach = () => {
                   )}
                   <div className="flex items-center justify-center mt-4">
                     <Award className="w-6 h-6 text-yellow-500 mr-2" />
-                    <span className="text-green-800 font-semibold">+10 Points</span>
+                    <span className="text-green-800 font-semibold">+2 Points</span>
                   </div>
                 </div>
               ) : (
-                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6">
-                  <h3 className="text-xl font-bold text-red-800 mb-4 text-center">Let's Practice More!</h3>
+                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 text-center">
+                  <h3 className="text-xl font-bold text-red-800 mb-4 ">Let's Practice More!</h3>
                   
-                  <div className="grid md:grid-cols-2 gap-6 mb-4">
-                    <div>
+                  <div className="grid md:grid-cols-1 gap-6 mb-6 justify-center">
+                    {/* <div>
                       <h4 className="font-semibold text-gray-800 mb-2">You said:</h4>
                       <p className="text-lg bg-red-100 p-3 rounded-lg">{result.transcribed_word}</p>
                       {result.full_transcription && (
                         <p className="text-sm text-gray-600 mt-1">Full: "{result.full_transcription}"</p>
                       )}
-                    </div>
+                    </div> */}
                     
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-2">Correct pronunciation:</h4>
-                      <div className="text-lg bg-blue-100 p-3 rounded-lg">
+                      <h4 className="font-bold text-gray-800 mb-2">pronunciation mistake:</h4>
+                      <div className="text-lg bg-blue-100 p-6 rounded-lg inline-block">
                         {result.highlighted_word ? 
                           renderHighlightedWord(result.highlighted_word) : 
                           result.expected_word
@@ -421,24 +521,24 @@ const PronunciationCoach = () => {
 
                   {/* Phoneme Analysis */}
                   {result['Expected Phonemes'] && result['Transcribed Phonemes'] && (
-                    <div className="bg-gray-50 p-4 rounded-lg mb-4">
+                    <div className="bg-gray-50 p-4 rounded-lg mb-4 text-center">
                       <h4 className="font-semibold text-gray-800 mb-3">Phoneme Analysis:</h4>
-                      <div className="grid md:grid-cols-2 gap-4">
+                      <div className="grid md:grid-cols-2 gap-4 justify-center">
                         <div>
-                          <h5 className="text-sm font-medium text-gray-700 mb-2">Expected Sounds:</h5>
-                          <div className="flex flex-wrap gap-1">
+                          <h5 className="text-sm font-medium text-gray-700 mb-2 text-center">Expected Sounds:</h5>
+                          <div className="flex flex-wrap justify-center gap-1">
                             {result['Expected Phonemes'].map((phoneme, index) => (
-                              <span key={index} className="bg-blue-200 text-blue-800 px-2 py-1 rounded text-xs">
+                              <span key={index} className="bg-blue-200 text-blue-800 px-3 py-3 rounded text-xs">
                                 {phoneme}
                               </span>
                             ))}
                           </div>
                         </div>
                         <div>
-                          <h5 className="text-sm font-medium text-gray-700 mb-2">Your Sounds:</h5>
-                          <div className="flex flex-wrap gap-1">
+                          <h5 className="text-sm font-medium text-gray-700 mb-2 text-cente">Your Sounds:</h5>
+                          <div className="flex flex-wrap justify-center gap-1">
                             {result['Transcribed Phonemes'].map((phoneme, index) => (
-                              <span key={index} className="bg-red-200 text-red-800 px-2 py-1 rounded text-xs">
+                              <span key={index} className="bg-red-200 text-red-800 px-3 py-3 rounded text-xs">
                                 {phoneme}
                               </span>
                             ))}
@@ -453,7 +553,7 @@ const PronunciationCoach = () => {
                       <h4 className="font-semibold text-gray-800 mb-2">Detailed Feedback:</h4>
                       <div className="space-y-2">
                         {result.phoneme_feedback.map((feedback, index) => (
-                          <div key={index} className="bg-yellow-100 p-3 rounded-lg text-sm">
+                          <div key={index} className="bg-yellow-50 p-3 rounded-lg text-sm">
                             <strong>Position {feedback.position}:</strong> Expected sound "{feedback.expected}" but heard "{feedback.transcribed}"
                           </div>
                         ))}
@@ -464,7 +564,7 @@ const PronunciationCoach = () => {
                   {result.missed_phonemes && result.missed_phonemes.length > 0 && (
                     <div className="mb-4">
                       <h4 className="font-semibold text-gray-800 mb-2">Sounds to Practice:</h4>
-                      <div className="flex flex-wrap gap-2 mb-3">
+                      <div className="flex flex-wrap justify-center gap-2 mb-3">
                         {result.missed_phonemes.map((phoneme, index) => (
                           <span key={index} className="bg-orange-200 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
                             {phoneme}
@@ -473,21 +573,29 @@ const PronunciationCoach = () => {
                       </div>
                       
                       <button
-                        onClick={() => setShowSimilarWords(!showSimilarWords)}
-                        className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+                        onClick={handleShowSimilarWords}
+                        disabled={isLoadingSimilarWords}
+                        className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
                       >
-                        {showSimilarWords ? 'Hide' : 'Show'} Practice Words
+                        {isLoadingSimilarWords ? (
+                          <div className="flex items-center">
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                            Generating Words...
+                          </div>
+                        ) : (
+                          showSimilarWords ? 'Hide Practice Words' : 'Show Practice Words'
+                        )}
                       </button>
                       
-                      {showSimilarWords && (
+                      {showSimilarWords && Object.keys(generatedSimilarWords).length > 0 && (
                         <div className="mt-4 bg-purple-50 p-4 rounded-lg">
-                          <h5 className="font-semibold text-purple-800 mb-3">Practice these words for better pronunciation:</h5>
+                          <h5 className="font-semibold text-purple-800 mb-3">These words will help you improve the sounds you mispronounced. Practice them regularly to strengthen your pronunciation.</h5>
                           <div className="space-y-3">
                             {result.missed_phonemes.map((phoneme, index) => (
                               <div key={index} className="mb-2">
                                 <div className="text-sm font-medium text-purple-700 mb-1">For sound "{phoneme}":</div>
-                                <div className="flex flex-wrap gap-2">
-                                  {(similarWords[phoneme] || ['practice more words with this sound']).map((word, wordIndex) => (
+                                <div className="flex flex-wrap justify-center gap-2">
+                                  {(generatedSimilarWords[phoneme] || similarWords[phoneme] || ['practice', 'more', 'words']).map((word, wordIndex) => (
                                     <span key={wordIndex} className="bg-purple-200 text-purple-800 px-3 py-1 rounded-full text-sm cursor-pointer hover:bg-purple-300 transition-colors"
                                           onClick={() => speakWord(word)}>
                                       {word} 🔊
@@ -590,7 +698,9 @@ const PronunciationCoach = () => {
           border-radius: 4px;
         }
       `}</style>
+      <Footer text="Adaptive Pronunciation Coaching for Beginners to Advanced" />
     </div>
+
   );
 };
 

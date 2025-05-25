@@ -3,6 +3,7 @@ import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import HomePageHeader from '../components/HomePageHeader';
+// import PhonemePageStartup from './PronouncePageStartup';
 
 
 const EnglishLearningHomepage = () => {
@@ -264,8 +265,8 @@ const EnglishLearningHomepage = () => {
                   <span>Real-world conversations</span>
                 </div>
               </div>
-              <button className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
-                Start Speaking <ChevronRight size={16} className="ml-1" />
+              <button onClick={() => navigate('/pronounce-startup')} className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
+                Practice Pronunciation <ChevronRight size={16} className="ml-1" />
               </button>
             </div>
 
