@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight } from 'lucide-react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import HomePageHeader from '../components/HomePageHeader';
 // import HomePageHeader from '../components/HomePageHeader';
 
 
@@ -111,7 +112,7 @@ const EnglishLearningHomepage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Navigation */}
-      <nav className="bg-white shadow-lg sticky top-0 z-40">
+      {/* <nav className="bg-white shadow-lg sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
@@ -133,7 +134,9 @@ const EnglishLearningHomepage = () => {
             </div>
           </div>
         </div>
-      </nav>
+      </nav> */}
+
+      <HomePageHeader/>
 
      
 
