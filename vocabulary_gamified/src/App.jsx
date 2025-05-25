@@ -36,7 +36,7 @@ function AppRoutes() {
       <Routes>
         {/* <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} /> */}
         
-        <Route path="/login" element={user ? <Navigate to="/homepage" /> : <LoginForm />} />
+        <Route path="/login" element={user ? <Navigate to="/" /> : <LoginForm />} />
   
       
       {/* Home Page */}
