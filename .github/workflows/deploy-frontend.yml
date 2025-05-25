@@ -3,7 +3,7 @@ name: Deploy React App to Netlify
 on:
   push:
     branches:
-      - main
+      - new_vocab
 
 jobs:
   build-and-deploy:
