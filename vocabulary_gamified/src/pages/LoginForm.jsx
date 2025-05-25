@@ -106,10 +106,16 @@ const LoginForm = () => {
       // Move to stage 2 (saving profile)
       setSignupStage(2);
       setXp(75);
-      
+      const userdata1={
+        isNew: true,
+      }
+      const validKey = signupEmail.replace(/[.#$\[\]]/g, '_');
+      await firebase.database().ref(`userdata/${validKey}`).set(userdata1);
+     
       // Prepare user data with default values
       const userData = {
         name,
+        validKey,
         email: signupEmail,
         level: 'level', // Default value
         preferences: 'any', // Default value
@@ -123,6 +129,7 @@ const LoginForm = () => {
       
       // Store user data in context
       setUser({
+        isNew: true,
         uid: userCredential.user.uid,
         email: userCredential.user.email,
         ...userData

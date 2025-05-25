@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../components/UserContext';
 import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight } from 'lucide-react';
+import { ref, get } from 'firebase/database';
+import { initializeRealtimeDB } from '../config/firebaseConfig';
 
 const EnglishLearningHomepage = () => {
+  const navigate = useNavigate();
   const [showTour, setShowTour] = useState(false);
   const [tourStep, setTourStep] = useState(0);
   const [isVisible, setIsVisible] = useState({});
-
+  const { user } = useUser();
   useEffect(() => {
     // Check if user is new (simulate with setTimeout for demo)
     const timer = setTimeout(() => {
@@ -221,7 +226,18 @@ const EnglishLearningHomepage = () => {
                   <span>Instant error correction</span>
                 </div>
               </div>
-              <button className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
+              <button 
+                onClick={async () => {
+                  console.log('dsfs',user);
+                  
+                  if (user?.isNew) {
+                    navigate('/user-details');
+                  } else {
+                    navigate('/paragraph');
+                  }
+                }} 
+                className="flex items-center text-blue-600 hover:text-blue-800 font-semibold"
+              >
                 Practice Grammar <ChevronRight size={16} className="ml-1" />
               </button>
             </div>

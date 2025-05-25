@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../components/UserContext';
+import { ref, get, set, update } from "firebase/database";
+import { initializeRealtimeDB } from "../config/firebaseConfig";
 import { Link,useNavigate  } from "react-router-dom";
 
 
 const DashboardOne = () => {
-
+  const navigate = useNavigate();
   const { user } = useUser();
   // Student data - would come from a database in a real app
   const [student, setStudent] = useState({
     name: "Alex Chen",
-    level: user.level,
+    level: user?.level || 'Beginner',  // Use optional chaining and default value
     points: 780,
     streak: 5,
     preferences: {
-      gameStyles: ["matching", "quiz", "flashcards"],
+      gameStyles: [],
       categories: ["academic", "technology", "literature"],
       difficulty: "medium",
       learningStyle: "visual",
@@ -34,7 +36,7 @@ const DashboardOne = () => {
   ]);
 
   // Game modes
-  const gameModes = [
+  const gameModes=[
     { id: "food-health", name: "Food & Health", icon: "🍎", description: "Learn paragraphs related to food and health" },
     { id: "places-travel", name: "Places & Travel", icon: "✈️", description: "Learn paragraphs related to places and travel" },
     { id: "festivals-celebrations", name: "Festivals & Celebrations", icon: "🎉", description: "Learn paragraphs related to festivals and celebrations" },
@@ -66,7 +68,7 @@ const DashboardOne = () => {
   const [showPreferences, setShowPreferences] = useState(false);
   const [showAddWord, setShowAddWord] = useState(false);
   const [newWord, setNewWord] = useState({ word: "", definition: "", category: "academic" });
-  
+  console.log('showww==',student);
   // Reading and MCQ states
   const [readingContent, setReadingContent] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,9 +76,6 @@ const DashboardOne = () => {
   const [userAnswers, setUserAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [resultsData, setResultsData] = useState(null);
-  const navigate = useNavigate();
-  
-  
   // Simple matching game state
   const [matchingGameState, setMatchingGameState] = useState({
     words: [],
@@ -84,6 +83,43 @@ const DashboardOne = () => {
     matched: [],
     selected: null
   });
+  useEffect(() => {
+    if (!user || !user.email) return;
+    const email = user.validKey;
+    const db = initializeRealtimeDB();
+    const sanitizedEmail = email.toString();
+    const userRef = ref(db, `userdata/${sanitizedEmail}`);
+    console.log('userRef', email);
+    get(userRef).then((snapshot) => {
+      console.log('snapshot', snapshot);
+      if (snapshot.exists()) {
+        console.log('snapshot.val()', snapshot.val());
+        const userData = snapshot.val();
+        console.log('userData', userData);
+        let leveld;
+        if(userData.level==='1'){
+          leveld='Beginner';
+        }else if(userData.level==='2'){
+          leveld='Elementary';
+        }else if(userData.level==='3'){
+          leveld='Intermediate';
+        }else if(userData.level==='4'){
+          leveld='Upper Intermediate';
+        }
+          
+        setStudent(prev => ({
+          ...prev,
+          points: userData.totalPoints || 0,
+          streak: userData.streak || 4,
+          level: leveld || 'Beginner',
+          gameModes: userData.topics || gameModes,
+        }));
+       
+      }
+    }).catch(error => {
+      console.error("Error fetching user data:", error);
+    });
+  }, []);
 const fetchReadingContent = async () => {
   setIsLoading(true);
   try {
@@ -351,29 +387,29 @@ const fetchReadingContent = async () => {
 
 
           <div className="flex ml-6 space-x-2">
-        <button 
+        {/* <button 
         
         onClick={exitGame2}  
         className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
         >
           <span className="mr-2">📝</span>
           <span>Paragraph</span>
-        </button>   
+        </button>    */}
         
-        <button 
+        {/* <button 
              onClick={exitGame1}
           className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
         >
           <span className="mr-2">📚</span>
           <span>Vocabulary</span>
-        </button>
-        <button 
+        </button> */}
+        {/* <button 
         
           className="bg-indigo-700 hover:bg-indigo-500 transition-colors duration-200 px-4 py-2 rounded-lg flex items-center shadow-md"
         >
           <span className="mr-2">🗣️</span>
           <span>Pronunciation</span>
-        </button>
+        </button> */}
       </div>
           <div className="flex items-center space-x-4">
 
@@ -396,7 +432,7 @@ const fetchReadingContent = async () => {
               <span className="mr-2">⚙️</span>
               <span>Preferences</span>
             </button>
-            <div 
+            {/* <div 
               className="bg-indigo-800 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer"
               onClick={() => {
                 setShowPreferences(false);
@@ -404,7 +440,7 @@ const fetchReadingContent = async () => {
               }}
             >
               {student.name.charAt(0)}
-            </div>
+            </div> */}
           </div>
         </div>
       </header>
@@ -456,11 +492,11 @@ const fetchReadingContent = async () => {
               </div>
               
               <div>
-                <h3 className="font-bold text-indigo-700 mb-3">Change Level</h3>
-                
+                {/* <h3 className="font-bold text-indigo-700 mb-3">Change Level</h3>
+                 */}
                 <div className="mb-4">
-                  <label className="block text-gray-700 mb-2">Difficulty Level</label>
-                  <select 
+                  {/* <label className="block text-gray-700 mb-2">Difficulty Level</label> */}
+                  {/* <select 
                     className="w-full p-2 border border-gray-300 rounded-md"
                     value={student.preferences.difficulty}
                     onChange={(e) => setStudent({
@@ -477,7 +513,7 @@ const fetchReadingContent = async () => {
                     <option value="very-hard">Intermediate B2</option>
                     <option value="hard">Advanced C1</option>
                     <option value="very-hard">Advanced C2</option>
-                  </select>
+                  </select> */}
                 </div>
               </div>
             </div>
@@ -720,10 +756,9 @@ const fetchReadingContent = async () => {
                 <div className="mt-4">
                   <button 
                     className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 w-full font-medium"
-                    onClick={fetchReadingContent}
-                    disabled={isLoading}
+                    onClick={() => navigate('/mcq')}
                   >
-                    {isLoading ? 'Loading...' : 'Start Now'}
+                    Start Now
                   </button>
                 </div>
               </div>

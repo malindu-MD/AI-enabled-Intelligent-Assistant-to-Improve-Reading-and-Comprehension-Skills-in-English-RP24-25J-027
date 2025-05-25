@@ -20,7 +20,8 @@ import UserDetails from './pages/UserDetails'
 import MCQAssessment from './components/MCQAssessment.jsx'
 import MainLayout from './components/MainLayout.jsx'
 import EnglishLearningHomepage from './pages/EnglishLearningHomepage.jsx'
-
+import MCQAssessment2 from './components/level1.jsx'
+import MCQAssessment3 from './components/level2.jsx'
 
 function AppRoutes() {
   const { user } = useUser();
@@ -37,11 +38,11 @@ function AppRoutes() {
       <Toaster position="top-right" reverseOrder={false} /> {/* Add Toaster Here */}
       <Routes>
 
-        <Route path="/" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} />
-        <Route path="/login" element={user ? <Navigate to="/DashboardOne" /> : <LoginForm />} />
+        <Route path="/ff" element={user ? <Navigate to="/DashboardOne" /> : <Navigate to="/login" />} />
+        {/* <Route path="/login" element={user ? <Navigate to="/DashboardOne" /> : <LoginForm />} /> */}
         <Route path="/user-details" element={<UserDetails />} />     
         
-        <Route path="/login" element={user ? <Navigate to="/homepage" /> : <LoginForm />} />
+        <Route path="/login" element={user ? <Navigate to="/" /> : <LoginForm />} />
   
       
       {/* Home Page */}
@@ -60,14 +61,17 @@ function AppRoutes() {
             < MainLayout />
           </ProtectedRoute>
         } />
-        <Route path="/paragraph" element={
+    <Route path="/mcq2" element={
           <ProtectedRoute>
-            <Paragraph />
+            <MCQAssessment2 />
           </ProtectedRoute>
         } />
-
-
-
+  <Route path="/mcq3" element={
+          <ProtectedRoute>
+            <MCQAssessment3 />
+          </ProtectedRoute>
+        } />
+      
 
 
 
