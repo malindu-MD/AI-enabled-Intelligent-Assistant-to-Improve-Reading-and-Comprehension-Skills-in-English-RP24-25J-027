@@ -277,7 +277,7 @@ const DashboardOne = () => {
     </div>
   </div>
   
-  <p className="text-gray-600 mb-4">Continue building your vocabulary skills. You're on a <span className="font-bold text-indigo-600">{student.streak}-day streak!</span></p>
+  <p className="text-gray-700 mb-4">Continue building your vocabulary skills.<span className="font-bold text-indigo-600"></span></p>
   
   <div className="mt-4 mb-4 bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg border-2 border-indigo-200 hover:from-indigo-100 hover:to-purple-100 transition-all duration-300 hover:shadow-md cursor-pointer">
     <h3 className="font-bold text-indigo-800 mb-2 flex items-center gap-2">

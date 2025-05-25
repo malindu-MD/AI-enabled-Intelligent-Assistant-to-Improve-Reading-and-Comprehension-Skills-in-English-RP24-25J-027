@@ -22,7 +22,7 @@ const Header = ({ student, setShowPreferences, setShowAddWord, handleSignOut }) 
             student.level === 'Advanced' ? 'bg-red-600' :
             student.level === 'Proficient' ? 'bg-purple-600' : 'bg-gray-600'
           } ml-4 px-3 py-1 rounded-full flex items-center`}>
-            <span>Your Level: <strong>{student.level}</strong> </span>
+            <span>Your Vocabulary Level: <strong>{student.level}</strong> </span>
             <span className="mr-2">{
               student.level === 'Beginner' ? '🌱' :
               student.level === 'Elementary' ? '🌿' :
@@ -46,6 +46,9 @@ const Header = ({ student, setShowPreferences, setShowAddWord, handleSignOut }) 
         </div>
 
         <div className="flex items-center space-x-4">
+            <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
+            <span className="mr-2">💭 Assessment Feedback</span>
+          </div>
           <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
             <span className="mr-2">⭐</span><span>{student.points} pts</span>
           </div>
@@ -71,3 +74,4 @@ const Header = ({ student, setShowPreferences, setShowAddWord, handleSignOut }) 
 };
 
 export default Header;
+
