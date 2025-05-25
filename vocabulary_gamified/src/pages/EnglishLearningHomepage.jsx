@@ -3,6 +3,7 @@ import { BookOpen, Users, Award, Target, Play, Star, ChevronRight, X, ArrowRight
 import firebase from 'firebase/compat/app';
 import HomePageHeader from '../components/HomePageHeader';
 import 'firebase/compat/auth';
+import { Link } from 'react-router-dom';
 import { useUser } from '../components/UserContext';
 const EnglishLearningHomepage = () => {
   const [showTour, setShowTour] = useState(false);
@@ -253,9 +254,9 @@ const EnglishLearningHomepage = () => {
                   console.log('Grammar button clicked', user);
                   console.log('user', user);
                   if (user?.isNew) {
-                    window.location.href = '/user-details';
+                    <Link to="/user" />
                   } else {
-                    window.location.href = '/paragraph';
+                    <Link to= "/paragraph"/>
                   }
                 }} 
                 className="flex items-center text-blue-600 hover:text-blue-800 font-semibold"

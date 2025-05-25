@@ -43,7 +43,7 @@ const HomePageHeader = () => {
   };
 
   const handleLogin = () => {
-   window.location.href = '/login';
+   <Link to="/login" />
   };
 
   const getInitials = (name) => {
