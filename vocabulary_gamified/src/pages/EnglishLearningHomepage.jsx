@@ -11,6 +11,7 @@ const EnglishLearningHomepage = () => {
   const [tourStep, setTourStep] = useState(0);
   const [isVisible, setIsVisible] = useState({});
   const { user } = useUser();
+  console.log('user',user);
   useEffect(() => {
     // Check if user is new (simulate with setTimeout for demo)
     const timer = setTimeout(() => {
@@ -57,6 +58,7 @@ const EnglishLearningHomepage = () => {
 
   const skipTour = () => {
     setShowTour(false);
+    console.log('sss',user);
   };
 
   const TourOverlay = () => {

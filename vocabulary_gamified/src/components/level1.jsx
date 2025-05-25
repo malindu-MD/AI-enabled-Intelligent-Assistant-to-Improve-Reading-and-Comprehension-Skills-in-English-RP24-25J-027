@@ -379,7 +379,7 @@ Required Output Format:
           console.error('Error saving error pattern:', error);
         });
       }
-
+   
       // Update user data
       const userRef = ref(db, `userdata/${email}`);
       
@@ -389,8 +389,8 @@ Required Output Format:
         let correctCount = 0;
         let incorrectCount = 0;
         let timeSpent = userAnswers.q1.timeSpent + userAnswers.q2.timeSpent + userAnswers.q3.timeSpent;
-        let avg=(valueget.totalTime+timeSpent)/(valueget.questionCount+3);
-console.log("Average:", avg);
+        let avg=(timeSpent)/(3);
+        console.log("Average:", avg);
 
        // Calculate correct and incorrect answers based on userAnswers
        // Calculate correct and incorrect answers based on userAnswers
@@ -414,13 +414,13 @@ console.log("Average:", avg);
         console.log("Incorrect Count:", incorrectCount);
         console.log("Levessssssl Prediction:", userAnswers);
         const userData = {
-          totalPoints: valueget.totalPoints+levelPrediction.final_score,
-          correctCount: valueget.correctCount+correctCount,
-          incorrectCount: valueget.incorrectCount+incorrectCount,
-          questionCount: valueget.incorrectCount+incorrectCount+correctCount,
+          totalPoints: levelPrediction.final_score,
+          correctCount: correctCount,
+          incorrectCount: incorrectCount,
+          questionCount: incorrectCount+correctCount,
           averageTime: avg,
           level:1,
-          totalTime: valueget.totalTime+timeSpent,
+          totalTime: timeSpent,
           lastAttempt: new Date().toISOString()
         };
       
@@ -442,7 +442,12 @@ console.log("Average:", avg);
   const nextRoundDecider = () => {
     console.log("Round Score:", roundScore);
     if (roundScore < 2) {
+      setUser({
+        isNew:false,
+        validKey:user.validKey,
+      })
       navigate('/paragraph')
+      
     }else{
       navigate('/mcq3')
     }

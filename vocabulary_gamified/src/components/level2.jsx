@@ -442,6 +442,9 @@ console.log("Average:", avg);
   const nextRoundDecider = () => {
     console.log("Round Score:", roundScore);
     if (roundScore < 2) {
+      setUser({
+        isNew:false
+      })
       navigate('/paragraph')
     }else{
       navigate('/mcq4')

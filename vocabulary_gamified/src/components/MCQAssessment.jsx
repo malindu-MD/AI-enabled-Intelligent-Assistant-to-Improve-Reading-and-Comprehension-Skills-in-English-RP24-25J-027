@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const MCQAssessment = () => {
   const navigate = useNavigate();
-  const { user, setUser } = useUser();
+  const { user } = useUser();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
   const [assessmentComplete, setAssessmentComplete] = useState(false);
@@ -377,16 +377,18 @@ Required Output Format:
           console.error('Error saving error pattern:', error);
         });
       }
-
+      console.log('sdscfds',email);
       // Update user data
       const userRef = ref(db, `userdata/${email}`);
       
       try {
         const snapshot = await get(userRef);
         let valueget =snapshot.val();
+        console.log("Value:", valueget);
         let correctCount = 0;
         let incorrectCount = 0;
         let timeSpent = userAnswers.q1.timeSpent + userAnswers.q2.timeSpent + userAnswers.q3.timeSpent;
+        console.log("Time Spent:", valueget.totalTime);
         let avg=(valueget.totalTime+timeSpent)/(valueget.questionCount+3);
 console.log("Average:", avg);
 

@@ -8,6 +8,7 @@ import { Link,useNavigate  } from "react-router-dom";
 const DashboardOne = () => {
   const navigate = useNavigate();
   const { user } = useUser();
+  console.log('usfffffffer',user);
   // Student data - would come from a database in a real app
   const [student, setStudent] = useState({
     name: "Alex Chen",
@@ -83,11 +84,13 @@ const DashboardOne = () => {
     matched: [],
     selected: null
   });
+  
   useEffect(() => {
-    if (!user || !user.email) return;
+    
     const email = user.validKey;
+    console.log('usererer',user);
     const db = initializeRealtimeDB();
-    const sanitizedEmail = email.toString();
+    const sanitizedEmail = email;
     const userRef = ref(db, `userdata/${sanitizedEmail}`);
     console.log('userRef', email);
     get(userRef).then((snapshot) => {

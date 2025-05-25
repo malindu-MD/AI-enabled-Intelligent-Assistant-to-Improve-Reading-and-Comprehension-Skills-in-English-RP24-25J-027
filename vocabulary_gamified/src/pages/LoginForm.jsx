@@ -71,6 +71,7 @@ const LoginForm = () => {
         const userData = snapshot.val();
         // Store user data in context
         setUser({
+          isNew: false,
           uid: userCredential.user.uid,
           email: userCredential.user.email,
           ...userData
@@ -132,9 +133,11 @@ const LoginForm = () => {
         isNew: true,
         uid: userCredential.user.uid,
         email: userCredential.user.email,
+        validKey:validKey,
         ...userData
       });
-      
+      console.log(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
       // Move to stage 3 (completed)
       setSignupStage(3);
       setXp(100);
