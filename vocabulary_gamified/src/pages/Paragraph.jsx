@@ -84,84 +84,59 @@ const DashboardOne = () => {
     matched: [],
     selected: null
   });
-  
-  // Fetch reading content from API
-  const fetchReadingContent = async () => {
-    setIsLoading(true);
-    try {
-      // Replace with your actual API endpoint
-      // const response = await fetch('your-api-endpoint');
-      // const data = await response.json();
-      
-      // Mock data structure for testing
-      const mockData = {
-        title: "Understanding Climate Change",
-        paragraphs: [
-          {
-            id: "p1",
-            text: "Climate change refers to long-term shifts in temperatures and weather patterns. These shifts may be natural, but since the 1800s, human activities have been the main driver of climate change, primarily due to the burning of fossil fuels like coal, oil, and gas, which produces heat-trapping gases.",
-            questions: [
-              {
-                id: "q1p1",
-                question: "What is the main driver of climate change since the 1800s?",
-                options: [
-                  "Natural weather patterns",
-                  "Solar flare activity",
-                  "Human activities",
-                  "Ocean temperature cycles"
-                ],
-                correctAnswer: 2 // Index of correct answer (0-based)
-              }
-            ]
-          },
-          {
-            id: "p2",
-            text: "The effects of climate change are widespread and include more frequent and severe weather events, rising sea levels, and shifts in wildlife populations and habitats. Scientists continue to develop new tools to predict these effects at a global and local level, and to determine mitigation strategies.",
-            questions: [
-              {
-                id: "q1p2",
-                question: "Which of these is NOT mentioned as an effect of climate change?",
-                options: [
-                  "More frequent weather events",
-                  "Rising sea levels",
-                  "Increased volcanic activity",
-                  "Shifts in wildlife populations"
-                ],
-                correctAnswer: 2
-              }
-            ]
-          },
-          {
-            id: "p3",
-            text: "Addressing climate change requires both mitigation (reducing emissions) and adaptation (preparing for impacts). International agreements like the Paris Climate Accord aim to limit global warming to well below 2°C compared to pre-industrial levels. Individual actions also matter, from energy conservation to sustainable lifestyle choices.",
-            questions: [
-              {
-                id: "q1p3",
-                question: "What is the goal of the Paris Climate Accord?",
-                options: [
-                  "To eliminate fossil fuels by 2030",
-                  "To limit global warming to well below 2°C",
-                  "To provide funding for climate refugees",
-                  "To tax carbon emissions globally"
-                ],
-                correctAnswer: 1
-              }
-            ]
-          }
-        ]
-      };
-      
-      setReadingContent(mockData);
-      setCurrentParagraphIndex(0);
-      setUserAnswers({});
-      setShowResults(false);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Error fetching reading content:", error);
-      setIsLoading(false);
-    }
-  };
-  
+const fetchReadingContent = async () => {
+  setIsLoading(true);
+  try {
+    const response = await fetch('http://127.0.0.1:8000/generate_mcqs/?level=A1&category=Animals&count=2');
+    const data = await response.json();
+
+    // Transform the API response to match the expected structure
+    const transformedData = {
+      title: "Reading Practice", // You can customize this title
+      paragraphs: data.paragraphs.map(paragraph => {
+        const options = paragraph.options.split(",").map(option => option.trim());
+
+        // Normalize the answer and options for comparison
+        const normalizeText = (text) => {
+          // Remove extra spaces and trim, and ensure consistent formatting
+          return text.replace(/\s*\)\s*/, ')').trim();
+        };
+
+        const normalizedAnswer = normalizeText(paragraph.answer);
+        const normalizedOptions = options.map(option => normalizeText(option));
+
+        // Find the correct answer index
+        const correctAnswer = normalizedOptions.indexOf(normalizedAnswer);
+
+        console.log('options', normalizedOptions);
+        console.log('answer', normalizedAnswer);
+        console.log('correctAnswer', correctAnswer);
+
+        return {
+          id: `p${paragraph.id}`,
+          text: paragraph.paragraph,
+          questions: [
+            {
+              id: `q1p${paragraph.id}`,
+              question: paragraph.mcq_question,
+              options: options,
+              correctAnswer: correctAnswer
+            }
+          ]
+        };
+      })
+    };
+
+    setReadingContent(transformedData);
+    setCurrentParagraphIndex(0);
+    setUserAnswers({});
+    setShowResults(false);
+    setIsLoading(false);
+  } catch (error) {
+    console.error("Error fetching reading content:", error);
+    setIsLoading(false);
+  }
+};
   // Handle selecting an answer for MCQs
   const handleAnswerSelect = (questionId, optionIndex) => {
     setUserAnswers(prev => ({
