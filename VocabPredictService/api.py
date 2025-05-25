@@ -33,6 +33,10 @@ class TextList(BaseModel):
 def read_root():
     return {"message": "Hello World "}
 
+@app.get("/dilshan")
+def read_root():
+    return {"message": "it is working "}
+
 
 @app.post("/predict")
 def predict(textlist: TextList):
