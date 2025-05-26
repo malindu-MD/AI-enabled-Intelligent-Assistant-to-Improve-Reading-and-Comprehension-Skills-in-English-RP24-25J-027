@@ -2,12 +2,34 @@ import json
 from collections import Counter
 import statistics
 import requests
-import traceback 
+import traceback
+
 # Configuration
 GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
 GEMINI_API_KEY = "AIzaSyA78rw7GrB4eXQi2XtJkapwRPBbDJad3F0"
 MAX_POINTS = 3.0
-TIME_PENALTY_THRESHOLD = 25  # seconds per question
+
+# CEFR Level Timing Guidelines
+CEFR_TIMING = {
+    'A1-A2': {
+        'text_length': '2-3 short sentences',
+        'time_per_paragraph': (60, 120),  # seconds
+        'time_per_question': (30, 60),
+        'total_time': (180, 300)  # 1 para + 3 questions
+    },
+    'B1': {
+        'text_length': '4-5 sentences',
+        'time_per_paragraph': (120, 180),
+        'time_per_question': (60, 90),
+        'total_time': (300, 480)
+    },
+    'B2': {
+        'text_length': '1 short paragraph',
+        'time_per_paragraph': (180, 240),
+        'time_per_question': (90, 120),
+        'total_time': (420, 600)
+    }
+}
 
 class PointCalculator:
     def __init__(self):
@@ -18,7 +40,8 @@ class PointCalculator:
         # Step 1: Algorithmic base score
         base_score = self._calculate_base_score(
             round_data['answers'],
-            round_data['response_times']
+            round_data['response_times'],
+            round_data.get('cefr_level', 'B1')  # Default to B1 if not specified
         )
         
         # Step 2: Prepare Gemini input
@@ -39,16 +62,27 @@ class PointCalculator:
             "gemini_adjustment": gemini_output['adjustment'],
             "final_score": round(final_score, 1),
             "feedback": gemini_output['reason'],
-            "error_pattern": gemini_input['error_types']
+            "error_pattern": gemini_input['error_types'],
+            "time_efficiency": gemini_input['time_efficiency']
         }
 
-    def _calculate_base_score(self, answers, response_times):
-        """Rule-based scoring (0-3 scale)"""
+    def _calculate_base_score(self, answers, response_times, cefr_level):
+        """Rule-based scoring (0-3 scale) with CEFR timing considerations"""
         accuracy = sum(a['is_correct'] for a in answers) / len(answers)
         avg_time = statistics.mean(response_times)
         
-        # Time efficiency factor (0.8 to 1.2 range)
-        time_factor = 1.2 - min(avg_time / TIME_PENALTY_THRESHOLD, 1.0)
+        # Get expected time range for this level
+        level_data = CEFR_TIMING.get(cefr_level, CEFR_TIMING['B1'])  # Default to B1
+        expected_min, expected_max = level_data['time_per_question']
+        
+        # Calculate time efficiency (0.8 to 1.2 range)
+        if avg_time <= expected_min:
+            time_factor = 1.2  # Faster than expected
+        elif avg_time >= expected_max:
+            time_factor = 0.8  # Slower than expected
+        else:
+            # Linear interpolation between min and max
+            time_factor = 1.2 - (0.4 * (avg_time - expected_min) / (expected_max - expected_min))
         
         # Clamp to 0-3 range
         return min(MAX_POINTS, accuracy * MAX_POINTS * time_factor)
@@ -58,14 +92,30 @@ class PointCalculator:
         emotions = round_data['emotion_data']['Emotions']
         dominant_emotion = max(emotions, key=lambda x: x['Confidence'])
         
+        # Calculate time efficiency metrics
+        cefr_level = round_data.get('cefr_level', 'B1')
+        level_data = CEFR_TIMING.get(cefr_level, CEFR_TIMING['B1'])
+        avg_time = statistics.mean(round_data['response_times'])
+        expected_min, expected_max = level_data['time_per_question']
+        
+        if avg_time < expected_min:
+            time_efficiency = "fast"
+        elif avg_time > expected_max:
+            time_efficiency = "slow"
+        else:
+            time_efficiency = "optimal"
+        
         return {
             "accuracy": sum(a['is_correct'] for a in round_data['answers']) / len(round_data['answers']),
-            "avg_time": statistics.mean(round_data['response_times']),
+            "avg_time": avg_time,
+            "expected_time_range": f"{expected_min}-{expected_max}s",
+            "time_efficiency": time_efficiency,
             "base_score": base_score,
             "dominant_emotion": dominant_emotion['Type'],
             "emotion_confidence": dominant_emotion['Confidence'],
             "error_types": self._detect_error_patterns(round_data['answers']),
-            "difficulty_level": round_data.get('difficulty_level', 2)
+            "difficulty_level": round_data.get('difficulty_level', 2),
+            "cefr_level": cefr_level
         }
 
     def _detect_error_patterns(self, answers):
@@ -84,15 +134,16 @@ class PointCalculator:
     def _get_gemini_adjustment(self, gemini_input):
         """Gets contextual adjustment from Gemini"""
         prompt = f"""
-        Analyze this learning round:
+        Analyze this learning round (CEFR Level: {gemini_input['cefr_level']}):
         - Accuracy: {gemini_input['accuracy']:.0%}
-        - Time/Question: {gemini_input['avg_time']:.1f}s
+        - Avg Time/Question: {gemini_input['avg_time']:.1f}s (Expected: {gemini_input['expected_time_range']})
+        - Time Efficiency: {gemini_input['time_efficiency'].upper()}
         - Base Score: {gemini_input['base_score']:.1f}/3
         - Emotion: {gemini_input['dominant_emotion']} ({gemini_input['emotion_confidence']}%)
         - Error Patterns: {', '.join(e[0] for e in gemini_input['error_types'])}
 
         Suggest:
-        1. Points adjustment (-0.5 to +0.5)
+        1. Points adjustment (-0.5 to +0.5) considering CEFR level expectations
         2. Short reason (20 words max)
         
         Respond ONLY with JSON format:
@@ -112,15 +163,11 @@ class PointCalculator:
                         }]
                     }]
                 },
-                timeout=10  # Add timeout
+                timeout=10
             )
-            
-            # Debugging - log the raw response
-            print("Gemini raw response:", response.text)
             
             response_data = response.json()
             
-            # Validate response structure
             if not response_data.get('candidates'):
                 raise ValueError("No candidates in response")
                 
@@ -129,10 +176,6 @@ class PointCalculator:
                 
             response_text = response_data['candidates'][0]['content']['parts'][0]['text']
             
-            # Debugging - log the response text
-            print("Gemini response text:", response_text)
-            
-            # Handle empty response
             if not response_text.strip():
                 return {"adjustment": 0.0, "reason": "No adjustment - empty response"}
             
@@ -147,7 +190,7 @@ class PointCalculator:
             return json.loads(response_text)
             
         except json.JSONDecodeError as e:
-            print(f"Failed to parse Gemini response: {e}\nResponse text: {response.text if 'response' in locals() else 'No response'}")
+            print(f"Failed to parse Gemini response: {e}")
             return {"adjustment": 0.0, "reason": "System error - using default adjustment"}
         except Exception as e:
             print(f"Gemini API error: {str(e)}")
@@ -173,10 +216,9 @@ class PointCalculator:
         dominant = max(emotion_data['Emotions'], key=lambda x: x['Confidence'])
         return (dominant['Type'] in ['HAPPY', 'CALM']
                 and dominant['Confidence'] > 85)
+
 def lambda_handler(event, context):
-    try:
-        print("Raw event:", event)  # Critical for debugging
-        
+    try:        
         # Case 1: Direct Lambda invocation with proper structure
         if all(key in event for key in ['answers', 'response_times', 'emotion_data']):
             pass  # Use event as-is
@@ -210,15 +252,6 @@ def lambda_handler(event, context):
                         'body_type': str(type(event['body']))
                     })
                 }
-        else:
-            return {
-                'statusCode': 400,
-                'body': json.dumps({
-                    'error': 'Invalid request format',
-                    'expected': 'Either direct payload or API Gateway format',
-                    'received_keys': list(event.keys())
-                })
-            }
 
         # Validate required fields
         required_fields = ['answers', 'response_times', 'emotion_data']
@@ -238,50 +271,26 @@ def lambda_handler(event, context):
         
         return {
             'statusCode': 200,
-            'headers': {'Content-Type': 'application/json'},
+            'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+                },
             'body': json.dumps(result)
         }
         
     except Exception as e:
-        print("Full error:", str(e))
         return {
             'statusCode': 500,
-            'headers': {'Content-Type': 'application/json'},
+            'headers': {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+                },
             'body': json.dumps({
                 'error': 'Internal processing error',
                 'type': type(e).__name__,
                 'message': str(e),
                 'stack_trace': traceback.format_exc()
-            })
-        }
-
-    try: # Handle API Gateway proxy case
-        if 'body' in event:
-            event = json.loads(event['body'])
-
-          # Validate required fields
-        required_fields = ['answers', 'response_times', 'emotion_data']
-        missing_fields = [field for field in required_fields if field not in event]
-        if missing_fields:
-            return {
-                'statusCode': 400,
-                'body': json.dumps({
-                    'error': 'Missing required fields',
-                    'missing': missing_fields,
-                    'available_fields': list(event.keys())
-                })
-            }
-
-        calculator = PointCalculator()
-        result = calculator.process_round(event)
-        return {
-            'statusCode': 200,
-            'body': json.dumps(result)
-        }
-    except Exception as e:
-        return {
-            'statusCode': 500,
-            'body': json.dumps({
-                'error': str(e)
             })
         }

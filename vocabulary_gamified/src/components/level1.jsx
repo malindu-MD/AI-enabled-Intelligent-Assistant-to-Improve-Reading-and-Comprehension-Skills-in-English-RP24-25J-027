@@ -12,7 +12,6 @@ const MCQAssessment2= () => {
   const [userAnswers, setUserAnswers] = useState({});
   const [assessmentComplete, setAssessmentComplete] = useState(false);
   const [emotionHistory, setEmotionHistory] = useState([]);
-  const [finalEmotion, setFinalEmotion] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [roundScore,setRoundScore]=useState(0);
