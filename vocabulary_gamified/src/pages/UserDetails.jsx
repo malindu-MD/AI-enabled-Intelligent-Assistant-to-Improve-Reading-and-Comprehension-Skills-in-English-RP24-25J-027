@@ -77,7 +77,7 @@ const UserDetails = () => {
           </div>
         ))}
       </div>
-      <div className="mb-4">
+      {/* <div className="mb-4">
         <label className="block mb-2">Grade:</label>
         <input
           type="text"
@@ -85,8 +85,8 @@ const UserDetails = () => {
           onChange={(e) => setGrade(e.target.value)}
           className="border p-2 rounded w-full"
         />
-      </div>
-      <div className="mb-4">
+      </div> */}
+      {/* <div className="mb-4">
         <label className="block mb-2">Age:</label>
         <input
           type="number"
@@ -94,7 +94,7 @@ const UserDetails = () => {
           onChange={(e) => setAge(e.target.value)}
           className="border p-2 rounded w-full"
         />
-      </div>
+      </div> */}
       <button
         onClick={function1}
         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors mr-2"

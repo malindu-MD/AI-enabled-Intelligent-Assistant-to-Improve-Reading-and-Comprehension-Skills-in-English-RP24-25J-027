@@ -109,13 +109,14 @@ const DashboardOne = () => {
         }));
         console.log('userDatssa', userData);
         let leveld;
-        if(userData.level==='1'){
+        console.log('userData.level', userData.level);
+        if(userData.level=='1'){
           leveld='Beginner';
-        }else if(userData.level==='2'){
+        }else if(userData.level=='2'){
           leveld='Elementary';
-        }else if(userData.level==='3'){
+        }else if(userData.level=='3'){
           leveld='Intermediate';
-        }else if(userData.level==='4'){
+        }else if(userData.level=='4'){
           leveld='Upper Intermediate';
         }
           
@@ -413,7 +414,9 @@ const updategameStyleToFirebase = async (topics)=>{
      
             <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
               <span className="mr-2">⭐</span>
-              <span>{student.points} pts</span>
+              
+
+              <span>{Number(student.points).toFixed(2)} pts</span>
             </div>
             <div className="bg-indigo-500 px-3 py-1 rounded-full flex items-center">
               <span className="mr-2">🔥</span>

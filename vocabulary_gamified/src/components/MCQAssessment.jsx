@@ -16,6 +16,12 @@ const MCQAssessment = () => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Monitor finalEmotion changes
+  useEffect(() => {
+    console.log('finalEmotion updated:', finalEmotion);
+    savegb();
+  }, [finalEmotion]);
+
   useEffect(() => {
     console.log("Fetching user and generating questions...");
     const fetchUserAndGenerateQuestions = async () => {
@@ -29,12 +35,25 @@ const MCQAssessment = () => {
         const userData = userSnap.exists() ? userSnap.val() : {};
         const errorData = errorSnap.exists() ? errorSnap.val() : {};
         const latestAnalysis = errorData.analysis?.slice(-1)[0]?.summary || "";
-
+        console.log("bawwa",userData.topics[0])
         const userLevel = userData.level || 1;
-
+     let levelc;
+     let topicb;
+        if(userLevel==1){
+        levelc='CEFR A1'
+      }else if(userLevel==2){
+        levelc='CEFR A2'
+      }else if(userLevel==3){
+        levelc='CEFR B1'
+      }else if(userLevel==4){
+        levelc='CEFR B2'
+      }
+      if(userData.emotion=='SAD'){
+        topicb=userData.topics[1];
+      }
         // Generate prompt for Gemini
         const prompt = `
-You are an expert reading comprehension tutor. Based on this student's current level (${userLevel}) and their past error pattern analysis, generate 3 multiple choice comprehension questions with 3 options each. Each question should include:
+You are an expert reading comprehension tutor. Based on this student's current level (${levelc}) and their past error pattern analysis, generate 3 multiple choice comprehension questions with 3 options each by choose one of the topic${topicb} . Each question should include:
 
 1. A short paragraph (3-5 sentences).
 2. One question based on the paragraph.
@@ -59,7 +78,21 @@ Respond in this JSON format:
   ...
 ]
 `;
+      const responsemodel= await fetch(
+        
+          "http://localhost:8000/generate",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              "level": "levelc",
+              "topic": "topicb"
+            })
+          }
+        );
 
+        const modelData = await responsemodel.json();
+        console.log("Model Response:", modelData);
         // Call Gemini API
         const response = await fetch(
           "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyA78rw7GrB4eXQi2XtJkapwRPBbDJad3F0",
@@ -160,7 +193,52 @@ Respond in this JSON format:
 
     fetchUserAndGenerateQuestions();
   }, []);
-
+const savegb =async ()=>{
+  const email = user.validKey;
+  const db = initializeRealtimeDB();
+  const userRef = ref(db, `userdata/${email}`);
+  console.log('mbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbm',finalEmotion[0].Confidence);
+ 
+  let emoval;   
+for (let i = 0; i < finalEmotion.length; i++) {
+  if (finalEmotion[i].Confidence >60) {
+    emoval = finalEmotion[i].Type;
+  }
+}
+  
+ console.log('tt',emoval)
+  try {
+    const snapshot = await get(userRef);
+    const userp= snapshot.val();
+    let plevel;
+    if(userp.totalPoints<300){
+      plevel=1
+    }
+    else if(userp.totalPoints>300){
+      plevel=2
+    }else if(userp.totalPoints>600){
+      plevel=3
+    }else if(userp.totalPoints>900){
+      plevel=4
+    }
+  
+    const userData = {
+     emotion: emoval,
+     level:plevel,
+    };
+  
+    if (snapshot.exists()) {
+      await update(userRef, userData);
+      console.log("User updated successfully");
+    } else {
+      await set(userRef, userData);
+      console.log("New user created successfully");
+    }
+}catch (error) {
+  console.error("Error updating user:", error);
+  
+}
+};
   const handleEmotionCapture = async (imageData) => {
     try {
       const response = await fetch(
@@ -217,7 +295,7 @@ Respond in this JSON format:
       await completeAssessment();
     }
   };
-
+let em;
   const completeAssessment = async () => {
     try {
       const email = user.validKey;
@@ -272,7 +350,9 @@ Required Output Format:
         )[1]
       );
       
-      console.log("Emotion Data:", emotionData);
+      console.log('Emotion Data before setting state:', emotionData.Emotions);
+      setFinalEmotion([...emotionData.Emotions]);
+      console.log('Final Emotion state after update:', finalEmotion);
       let levelPrediction;
       if (emotionData) {
         const apiData = {
@@ -313,7 +393,7 @@ Required Output Format:
       // Analyze error patterns for wrong answers
       const wrongAnswers = Object.entries(userAnswers).filter(([id, answer]) => !answer.isCorrect);
 
-      if (wrongAnswers.length > 0) {
+      if (wrongAnswers.length > 0) { 
         const errorPatternPrompt = wrongAnswers.map(([id, answer]) => {
           const question = questions.find(q => q.id === id);
           return `Question: ${question.question}\n` +
@@ -345,9 +425,9 @@ Required Output Format:
         );
 
         const result1 = await response1.json();
-        console.log("Error Analysis:", result1);
+       
         const errorAnalysis = result1.candidates[0].content.parts[0].text;
-        console.log("Error Analysis:", errorAnalysis);
+   
        
         // Save error patterns to Firebase
         const errorPatternRef = ref(db, `errorPatterns/${email}`);
@@ -412,13 +492,15 @@ console.log("Average:", avg);
        }
        console.log("Correct Count:", correctCount);
         console.log("Incorrect Count:", incorrectCount);
-        console.log("Levessssssl Prediction:", userAnswers);
+        console.log("Levessssssl Prediction:", finalEmotion);
+      
         const userData = {
           totalPoints: valueget.totalPoints+levelPrediction.final_score,
           correctCount: valueget.correctCount+correctCount,
           incorrectCount: valueget.incorrectCount+incorrectCount,
           questionCount: valueget.incorrectCount+incorrectCount+correctCount,
           averageTime: avg,
+          // lastEmotion:
           totalTime: valueget.totalTime+timeSpent,
           lastAttempt: new Date().toISOString()
         };
@@ -473,7 +555,7 @@ console.log("Average:", avg);
             <div className="space-y-6">
               <EmotionCapture
                 onCapture={handleEmotionCapture}
-                interval={5000}
+                interval={2000}
               />
 
               {/* Progress Bar */}

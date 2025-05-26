@@ -115,18 +115,18 @@ const EmotionCapture = ({ onCapture, interval = 5000 }) => {
   }, [stream, interval, onCapture, isVideoReady]);
 
   return (
-    <div style={{ border: '1px solid #ccc', padding: '10px', margin: '10px' }}>
-      <h3>Camera Debug</h3>
-      <div>Status: {debugInfo}</div>
+    <div style={{ padding: '10px', margin: '10px' }}>
+      {/* <h3>Camera Debug</h3>
+      <div>Status: {debugInfo}</div> */}
       <video
         ref={videoRef}
         autoPlay
         playsInline
         muted
         style={{ 
-          width: '320px', 
-          height: '240px',
-          border: '2px solid red',  // Make it very visible
+          width: '100px', 
+          height: '100px',
+         // Make it very visible
           backgroundColor: '#eee'   // Shows if video not loading
         }}
       />
