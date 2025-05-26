@@ -308,29 +308,30 @@ const EnglishLearningHomepage = () => {
                 <div className="bg-orange-100 p-3 rounded-full">
                   <Award className="h-8 w-8 text-orange-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 ml-4">Listening Skills</h3>
+                <h3 className="text-2xl font-bold text-gray-900 ml-4">Master Advanced Comprehension Skills </h3>
               </div>
               <p className="text-gray-600 mb-6">
-                Improve your listening comprehension with diverse audio content. From beginner-friendly 
-                stories to advanced podcasts and news articles.
+               Sharpen your high-level reading and comprehension skills with this module. Designed for learners aiming to go beyond surface reading, this tool personalizes your journey through interest-based quizzes and real-time feedback.
+
+
               </p>
               <div className="space-y-3 mb-6">
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Diverse audio content</span>
+                  <span>AI-Generated Quizzes tailored to your interests and skill level</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Multiple accents & speeds</span>
+                  <span>Personalized Pathway to based on CEFR Framework</span>
                 </div>
                 <div className="flex items-center text-sm text-gray-700">
                   <Star className="h-4 w-4 text-yellow-500 mr-2" />
-                  <span>Interactive comprehension tests</span>
+                  <span>Automated Assesment & Instant Feedback</span>
                 </div>
               </div>
-              <button className="flex items-center text-blue-600 hover:text-blue-800 font-semibold">
-                Improve Listening <ChevronRight size={16} className="ml-1" />
-              </button>
+                <a href='https://readifysrllanka.netlify.app/ '> Improve Listening <ChevronRight size={16} className="ml-1" /></a>
+               
+              
             </div>
           </div>
         </div>
