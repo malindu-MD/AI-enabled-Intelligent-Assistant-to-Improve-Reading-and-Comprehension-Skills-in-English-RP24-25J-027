@@ -3,7 +3,7 @@
 ## Contributors Checklist
 
 ### **Ranaweera A.P. - IT21182396 (Group Leader)**  
-![My Image](images/RP diagram.png)
+![My Image](images/RPdiagram.png)
 - [ ] Assigned tasks to team members.  
 - [ ] Reviewed pull requests and ensured quality code standards.  
 - [ ] Maintained project documentation (README, Wiki, etc.).  
