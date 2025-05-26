@@ -29,13 +29,13 @@ model = Model("cefr_predictor/models/xgboost.joblib")
 class TextList(BaseModel):
     texts: List[str] = []
 
-@app.get("/malindu")
-def read_root():
-    return {"message": "Hello World "}
+# @app.get("/malindu")
+# def read_root():
+#     return {"message": "Hello World "}
 
-@app.get("/dilshan")
-def read_root():
-    return {"message": "it is working "}
+# @app.get("/dilshan")
+# def read_root():
+#     return {"message": "it is working "}
 
 
 @app.post("/predict")
