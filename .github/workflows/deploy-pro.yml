@@ -5,7 +5,7 @@ on:
     paths:
       - 'pronunciation-service/**'
       - '.github/workflows/deploy-pro.yml'
-    branches: [new_vocab]
+    branches: [dev]
 
 jobs:
   deploy:

@@ -10,15 +10,15 @@ import os
 # Configure Gemini
 
 
-genai.configure(api_key="AIzaSyDU5z69qVaIYtrBXEjRB_GZPXP4mfOIpRo")  # Ensure you have the correct API key for Gemini
-modelLLM = genai.GenerativeModel("gemini-1.5-flash")  # Use the correct model variant
+genai.configure(api_key="AIzaSyDU5z69qVaIYtrBXEjRB_GZPXP4mfOIpRo")  
+modelLLM = genai.GenerativeModel("gemini-1.5-flash")  
 
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change to specific domains for production
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
