@@ -129,7 +129,7 @@ const PronunciationCoach = () => {
     formData.append('expected_word', currentWord);
     
     try {
-      const response = await fetch('http://127.0.0.1:8000/compare', {
+      const response = await fetch('http://18.212.234.195/compare', {
         method: 'POST',
         body: formData,
       });
