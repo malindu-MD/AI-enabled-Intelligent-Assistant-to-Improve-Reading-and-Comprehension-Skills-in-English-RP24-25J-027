@@ -58,3 +58,5 @@
 - Senanayake W.G.B. - IT21158322
 - Sooriyaarachchi M.D.A - IT21173790
 - Kumarathunga S.A.D.S - IT21118340
+- Mr. Jeewaka Perera -(Co-Supervisor)
+- Dr. Dasuni Nawiina -(Supervisor)
