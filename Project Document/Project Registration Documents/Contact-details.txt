@@ -1,0 +1,6 @@
+Student ID	Student name	SLIIT email	Mobile
+
+1. IT21173790 Sooriyaarachchi M.D.A  it21173790@my.sliit.lk 0784747390
+2. IT21158322 Senanayake W.G.B  it21158322@my.sliit.lk  0774298764
+3. IT21118340 Kumarathunga S.A.D.S  it21118340@my.sliit.lk  0776733319
+4. IT21182396 Ranaweera A.P.  it21182396@my.sliit.lk  0712300379
